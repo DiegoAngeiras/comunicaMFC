@@ -1118,17 +1118,17 @@ const estrategias = {
   'N1·Externo·Preservada':  { p1:'Conselho explícito com identificação grupal', p2:'Modelagem de comportamento como reforço', mod:'"Quase todos os meus pacientes nessa situação..." — âncora grupal reduz dependência do LC-Ext', evitar:'Argumento centrado na autonomia individual (não ressoa com LC-Ext)' },
   'N1·Interno·Parcial':     { p1:'Conselho explícito + reforço de autoeficácia', p2:'Persuasão confrontativa com normalização', mod:'Nomear experiências passadas de sucesso antes de propor o plano', evitar:'Crítica ou avaliação negativa de tentativas anteriores' },
   'N1·Misto·Parcial':       { p1:'Conselho explícito + validação do contexto', p2:'Persuasão confrontativa com legitimação', mod:'Equilibrar responsabilidade pessoal e recursos externos disponíveis', evitar:'Atribuir toda a responsabilidade ao paciente' },
-  'N1·Externo·Parcial':     { p1:'Conselho explícito com modelagem', p2:'Identificação grupal + reforço externo', mod:'Plano concreto e estruturado — LC-Ext responde melhor a estrutura do que a apelos à autonomia', evitar:'Discurso de autonomia pessoal; pressão por decisão imediata' },
+  'N1·Externo·Parcial':     { p1:'Conselho explícito com Modelagem de comportamento', p2:'Identificação grupal + reforço externo', mod:'Plano concreto e estruturado — LC-Ext responde melhor a estrutura do que a apelos à autonomia', evitar:'Discurso de autonomia pessoal; pressão por decisão imediata' },
   'N1·Interno·Comprometida':{ p1:'Conselho explícito + reforço de autoeficácia', p2:'Persuasão confrontativa com normalização', mod:'Restaurar senso de valor antes de propor o plano', evitar:'Linguagem que possa soar como crítica ou avaliação' },
   'N1·Misto·Comprometida':  { p1:'Conselho explícito + validação + reforço', p2:'Identificação grupal', mod:'Equilibrar validação do contexto externo com reforço da autoestima', evitar:'Atribuir responsabilidade antes de restaurar autoestima' },
   'N1·Externo·Comprometida':{ p1:'Identificação grupal + reforço externo', p2:'Modelagem de comportamento', mod:'Plano estruturado; referências coletivas como âncora; evitar apelos à decisão pessoal', evitar:'Argumento de autonomia; qualquer linguagem que possa soar como crítica' },
 
   'N2·Interno·Preservada':  { p1:'Persuasão motivacional — criar divergência', p2:'Exploração de consequências das crenças atuais', mod:'Evocar valores e projetos de vida do próprio paciente como motor', evitar:'Conselho diretivo — ativa resistência em quem tem LC-Int forte' },
-  'N2·Interno·Parcial':     { p1:'Persuasão motivacional + reforço de autoeficácia', p2:'Favorecer autoeficácia antes de criar divergência', mod:'"O simples fato de ter vindo aqui já é um passo" — reforçar antes de explorar ambivalências', evitar:'Criar divergência prematuramente antes de estabilizar a autoestima' },
+  'N2·Interno·Parcial':     { p1:'Persuasão motivacional + Reforço de autoeficácia', p2:'Reforço de autoeficácia antes de criar divergência', mod:'"O simples fato de ter vindo aqui já é um passo" — reforçar antes de explorar ambivalências', evitar:'Criar divergência prematuramente antes de estabilizar a autoestima' },
   'N2·Interno·Comprometida':{ p1:'Reforço de autoestima como pré-condição', p2:'Persuasão motivacional somente após estabilização', mod:'Restaurar dignidade e senso de valor antes de qualquer proposta de mudança', evitar:'Qualquer técnica persuasiva antes de trabalhar a autoestima; linguagem que possa soar como crítica' },
-  'N2·Misto·Preservada':    { p1:'Persuasão motivacional + absorver resistência', p2:'Legitimar e normalizar divergência', mod:'Explorar quem ou o quê poderia apoiar a mudança — citar a rede como recurso real', evitar:'Ignorar os condicionantes externos citados pelo paciente' },
+  'N2·Misto·Preservada':    { p1:'Persuasão motivacional + Absorver a resistência', p2:'Legitimar e normalizar a divergência', mod:'Explorar quem ou o quê poderia apoiar a mudança — citar a rede como recurso real', evitar:'Ignorar os condicionantes externos citados pelo paciente' },
   'N2·Misto·Parcial':       { p1:'Persuasão motivacional com normalização', p2:'Reforço de autoeficácia + identificação de suporte', mod:'Validar o contexto externo e nomear recursos internos — equilíbrio explícito', evitar:'Pressionar por autonomia ou por dependência' },
-  'N2·Misto·Comprometida':  { p1:'Reforço de autoestima + legitimação do contexto', p2:'Conselho inoculado como semente inicial', mod:'Não iniciar persuasão formal — plantar ideia sem esperar debate', evitar:'Técnicas que exijam elaboração cognitiva complexa; criação de divergência' },
+  'N2·Misto·Comprometida':  { p1:'Reforço de autoestima + Legitimar e normalizar a divergência', p2:'Conselho inoculado como semente inicial', mod:'Não iniciar persuasão formal — plantar ideia sem esperar debate', evitar:'Técnicas que exijam elaboração cognitiva complexa; criação de divergência' },
   'N2·Externo·Preservada':  { p1:'Persuasão motivacional com âncora grupal', p2:'Identificação grupal + criação de divergência indireta', mod:'"Muitas pessoas nessa situação..." — a âncora grupal substitui o LC-Int ausente', evitar:'Argumentos centrados em autonomia e decisão pessoal' },
   'N2·Externo·Parcial':     { p1:'Conselho inoculado + identificação grupal', p2:'Reforço de autoeficácia com exemplos externos', mod:'Estruturar abordagem em torno de referências externas positivas antes de qualquer apelo à decisão pessoal', evitar:'Discurso de responsabilidade individual; criação de divergência direta' },
   'N2·Externo·Comprometida':{ p1:'Conselho inoculado como única intervenção verbal', p2:'Modelagem de comportamento como suporte externo', mod:'A palavra deve ser mínima, indireta e não ameaçadora; planejar suporte externo concreto', evitar:'Qualquer forma de persuasão direta ou criação de divergência' },
@@ -1462,7 +1462,12 @@ function renderPerfil() {
     </div>`).join('') || '<div style="color:var(--slate-400);font-size:.82rem">Nenhum sinal marcado.</div>';
 
   const avisoHTML = aviso
-    ? `<div class="alert alert-info" style="margin-top:1.25rem"><span>${aviso}</span></div>`
+    ? `<div class="alert alert-info" style="margin-top:1.25rem"><span>${aviso}</span></div>
+       <div style="margin-top:.75rem">
+         <button class="btn btn-ghost" onclick="reclassificarNivel()" style="font-size:.82rem;padding:.55rem 1.1rem">
+           Reclassificar como nível ${nivel === 3 ? '2' : '3'}
+         </button>
+       </div>`
     : '';
 
   document.getElementById('perfil-output').innerHTML = `
@@ -1522,6 +1527,12 @@ const tecnicas = {
     fundamento: '"Não existe pior inimigo para uma das nossas crenças que o resto das nossas próprias crenças em contradição com ela" (William James, citado por Carrió). A frase-chave: "Talvez ocorra exatamente o contrário do que o senhor supõe."',
     exemplo: 'Paciente: "Sou escravo da insulina." Profissional: "O senhor não acha que é ser mais escravo vir ao pronto-socorro todo mês com uma descompensação? Talvez a insulina evite que seja escravo do diabetes."',
   },
+  'Exploração de consequências das crenças atuais': {
+    pagina: '154–156',
+    definicao: 'Técnica que consiste em conduzir o paciente a refletir sobre as consequências práticas e pessoais de manter suas crenças e comportamentos atuais. Não é uma confrontação, mas uma expansão reflexiva que prepara o terreno para a divergência cognitiva.',
+    fundamento: 'Ao tornar visíveis as implicações futuras das crenças atuais, o profissional cria o contexto necessário para a persuasão motivacional. É especialmente eficaz em pacientes com LC-Interno e AE-Preservada, que possuem recursos cognitivos para processar essa reflexão sem se fechar defensivamente.',
+    exemplo: '"Se as coisas continuarem como estão, o que o senhor imagina que acontecerá daqui a um ano?" / "Quando o senhor pensa em manter esse hábito, o que vem à mente sobre o futuro?"',
+  },
   'Absorver a resistência': {
     pagina: '155',
     definicao: 'Quando o paciente apresenta argumentos defensivos, o profissional não os confronta diretamente. Em vez disso, acolhe a resistência parcialmente e redireciona para outro aspecto do hábito sobre o qual não existe defesa articulada.',
@@ -1534,7 +1545,7 @@ const tecnicas = {
     fundamento: '"Um clima emocional de culpa levanta resistências que dificilmente podem ser superadas, não importando quais sejam as habilidades verbais aplicadas." O bom clima permite inclusive erros nas mensagens sem comprometer o vínculo.',
     exemplo: '"Eu só vou influenciá-lo até onde o senhor permitir e, em todo caso, não espere um sermão. O que quero é entender melhor a sua situação."',
   },
-  'Favorecer a autoeficácia': {
+  'Reforço de autoeficácia': {
     pagina: '155',
     definicao: 'Técnica que consiste em transmitir ao paciente a mensagem de que ele é capaz de realizar a mudança, valorizando qualquer passo já dado — inclusive o ato de comparecer à consulta.',
     fundamento: 'A percepção de autoeficácia é um dos pilares do locus de controle interno. Sem ela, mesmo a melhor orientação técnica não se traduz em ação. Pequenas vitórias narradas pelo profissional funcionam como evidência de capacidade.',
@@ -1735,6 +1746,14 @@ function irParaReflexao() {
   document.getElementById('reflexao-output').innerHTML = html;
   mostrarSecao('sec-reflexao');
   atualizarProgress(6);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RECLASSIFICAÇÃO DE NÍVEL (baixa acurácia N3 ↔ N2)
+// ═══════════════════════════════════════════════════════════════
+function reclassificarNivel() {
+  state.nivel = state.nivel === 3 ? 2 : 3;
+  renderPerfil();
 }
 
 // ═══════════════════════════════════════════════════════════════
