@@ -1,0 +1,1762 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ComunicaMFC — Sistema de Classificação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ─────────────────────────────────────────────────── */
+:root {
+  --slate-950: #0c1220;
+  --slate-900: #131c2e;
+  --slate-800: #1e2d45;
+  --slate-700: #2a3f5f;
+  --slate-600: #3d5a80;
+  --slate-400: #7a9bbf;
+  --slate-200: #c8d8ea;
+  --slate-100: #e8f0f8;
+  --slate-50:  #f4f8fc;
+
+  --amber-500: #d97706;
+  --amber-400: #f59e0b;
+  --amber-300: #fcd34d;
+  --amber-100: #fef3c7;
+
+  --green-600: #16a34a;
+  --green-100: #dcfce7;
+  --red-600:   #dc2626;
+  --red-100:   #fee2e2;
+
+  --font-serif: 'Lora', Georgia, serif;
+  --font-sans:  'DM Sans', system-ui, sans-serif;
+  --font-mono:  'DM Mono', monospace;
+
+  --radius:   12px;
+  --radius-sm: 6px;
+  --shadow-card: 0 4px 24px rgba(12,18,32,.18), 0 1px 4px rgba(12,18,32,.10);
+  --shadow-hover: 0 8px 32px rgba(12,18,32,.28);
+  --transition: .25s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── RESET + BASE ───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-sans);
+  background: var(--slate-950);
+  color: var(--slate-100);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── BACKGROUND TEXTURE ─────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 10% 20%, rgba(61,90,128,.25) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 80%, rgba(217,119,6,.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* ── LAYOUT ─────────────────────────────────────────────────── */
+.app {
+  position: relative; z-index: 1;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 6rem;
+}
+
+/* ── HEADER ─────────────────────────────────────────────────── */
+.header {
+  text-align: center;
+  padding: 3rem 0 2.5rem;
+  animation: fadeDown .6s ease both;
+}
+.header-eyebrow {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--amber-400);
+  margin-bottom: .75rem;
+}
+.header h1 {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: .5rem;
+}
+.header h1 span { color: var(--amber-400); }
+.header-sub {
+  font-size: .95rem;
+  color: var(--slate-400);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ── PROGRESS BAR ───────────────────────────────────────────── */
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin: 2rem 0;
+  animation: fadeUp .6s .15s ease both;
+}
+.progress-step {
+  display: flex; align-items: center; gap: .5rem;
+  font-size: .78rem;
+  font-weight: 500;
+  color: var(--slate-400);
+  transition: color var(--transition);
+}
+.progress-step.active { color: var(--amber-400); }
+.progress-step.done   { color: var(--green-600); }
+.step-dot {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .72rem; font-weight: 600;
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+.progress-step.active .step-dot {
+  background: var(--amber-400);
+  border-color: var(--amber-400);
+  color: var(--slate-950);
+}
+.progress-step.done .step-dot {
+  background: var(--green-600);
+  border-color: var(--green-600);
+  color: #fff;
+}
+.step-label { display: none; }
+@media(min-width: 520px) { .step-label { display: inline; } }
+.progress-line {
+  flex: 1; height: 2px;
+  background: var(--slate-800);
+  border-radius: 1px;
+  position: relative; overflow: hidden;
+}
+.progress-line::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--amber-400);
+  width: var(--fill, 0%);
+  transition: width .5s ease;
+}
+
+/* ── CARD ───────────────────────────────────────────────────── */
+.card {
+  background: var(--slate-900);
+  border: 1px solid var(--slate-800);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-card);
+  padding: 2rem;
+  margin-bottom: 1.25rem;
+  animation: fadeUp .4s ease both;
+}
+.card-title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: .35rem;
+  display: flex; align-items: center; gap: .6rem;
+}
+.card-title .badge {
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  font-weight: 500;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: .2rem .55rem;
+  border-radius: 100px;
+  background: var(--slate-800);
+  color: var(--amber-400);
+  border: 1px solid var(--slate-700);
+}
+.card-subtitle {
+  font-size: .85rem;
+  color: var(--slate-400);
+  margin-bottom: 1.25rem;
+  font-style: italic;
+}
+.card-quote {
+  font-family: var(--font-serif);
+  font-size: .88rem;
+  font-style: italic;
+  color: var(--slate-400);
+  border-left: 3px solid var(--amber-400);
+  padding: .6rem 1rem;
+  margin-bottom: 1.25rem;
+  background: rgba(217,119,6,.06);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  line-height: 1.7;
+}
+
+/* ── PERGUNTA ───────────────────────────────────────────────── */
+.question-block {
+  border: 1px solid var(--slate-800);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-bottom: .75rem;
+}
+.question-header {
+  padding: .9rem 1.1rem;
+  background: var(--slate-800);
+  font-size: .92rem;
+  font-weight: 500;
+  color: var(--slate-100);
+  display: flex; align-items: flex-start; gap: .7rem;
+}
+.question-code {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  font-weight: 500;
+  color: var(--amber-400);
+  background: rgba(217,119,6,.12);
+  padding: .15rem .45rem;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: .1rem;
+}
+.question-text { flex: 1; line-height: 1.5; }
+
+/* ── SINAIS (CHECKBOXES) ────────────────────────────────────── */
+.signals {
+  padding: .75rem 1.1rem;
+  display: flex; flex-direction: column; gap: .4rem;
+  background: rgba(30,45,69,.4);
+}
+.signal-label {
+  display: flex; align-items: flex-start; gap: .65rem;
+  cursor: pointer;
+  font-size: .83rem;
+  color: var(--slate-400);
+  line-height: 1.5;
+  padding: .35rem .5rem;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition);
+  user-select: none;
+}
+.signal-label:hover { background: var(--slate-800); color: var(--slate-200); }
+.signal-label input[type=checkbox] { display: none; }
+.signal-box {
+  width: 18px; height: 18px; flex-shrink: 0; margin-top: .1rem;
+  border: 2px solid var(--slate-600);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+  font-size: .7rem;
+}
+.signal-label input:checked ~ .signal-box {
+  background: var(--amber-400);
+  border-color: var(--amber-400);
+  color: var(--slate-950);
+}
+.signal-label input:checked ~ .signal-box::after { content: '✓'; }
+.signal-label input:checked ~ .signal-text { color: var(--slate-100); }
+.signal-polo {
+  margin-left: auto; flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  padding: .1rem .35rem;
+  border-radius: 3px;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+.signal-label input:checked ~ .signal-polo { opacity: 1; }
+.polo-A { background: rgba(22,163,74,.2);  color: #4ade80; }
+.polo-B { background: rgba(217,119,6,.2);  color: var(--amber-300); }
+.polo-C { background: rgba(220,38,38,.2);  color: #f87171; }
+.polo-N { background: rgba(100,116,139,.2); color: var(--slate-400); }
+
+/* ── SÍNTESE TRIFURCADA ─────────────────────────────────────── */
+.triforked {
+  padding: .85rem 1.1rem;
+  background: var(--slate-950);
+  display: flex; gap: .5rem; flex-wrap: wrap;
+}
+.tri-label {
+  font-size: .72rem;
+  color: var(--slate-400);
+  margin-bottom: .4rem;
+  font-weight: 500;
+  width: 100%;
+  letter-spacing: .03em;
+}
+.tri-option {
+  flex: 1; min-width: 80px;
+  padding: .55rem .7rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--slate-700);
+  background: transparent;
+  color: var(--slate-400);
+  font-family: var(--font-sans);
+  font-size: .8rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: center;
+  line-height: 1.3;
+}
+.tri-option:hover { border-color: var(--slate-500); color: var(--slate-200); }
+.tri-option.selected-A {
+  background: rgba(22,163,74,.15);
+  border-color: #16a34a;
+  color: #4ade80;
+}
+.tri-option.selected-B {
+  background: rgba(217,119,6,.15);
+  border-color: var(--amber-500);
+  color: var(--amber-300);
+}
+.tri-option.selected-C {
+  background: rgba(220,38,38,.15);
+  border-color: #dc2626;
+  color: #f87171;
+}
+.tri-option.selected-N {
+  background: rgba(100,116,139,.15);
+  border-color: var(--slate-600);
+  color: var(--slate-400);
+}
+
+/* ── REGRA DE DECISÃO ───────────────────────────────────────── */
+.rule-box {
+  display: flex; align-items: flex-start; gap: .65rem;
+  padding: .75rem 1rem;
+  background: rgba(217,119,6,.07);
+  border: 1px solid rgba(217,119,6,.2);
+  border-radius: var(--radius-sm);
+  margin-top: .75rem;
+  font-size: .82rem;
+  color: var(--slate-300);
+  line-height: 1.6;
+}
+.rule-icon { flex-shrink: 0; font-size: 1rem; }
+
+/* ── BOTÕES ─────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: .75rem 1.5rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: .9rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition);
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--amber-400);
+  color: var(--slate-950);
+}
+.btn-primary:hover {
+  background: var(--amber-300);
+  box-shadow: 0 4px 16px rgba(217,119,6,.35);
+  transform: translateY(-1px);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--slate-400);
+  border: 1px solid var(--slate-700);
+}
+.btn-ghost:hover { background: var(--slate-800); color: var(--slate-200); }
+.btn-actions {
+  display: flex; gap: .75rem; flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+/* ── PERFIL OUTPUT ──────────────────────────────────────────── */
+.profile-card {
+  background: linear-gradient(135deg, var(--slate-800) 0%, rgba(30,45,69,.8) 100%);
+  border: 1px solid var(--slate-700);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin-bottom: 1.25rem;
+  box-shadow: var(--shadow-card);
+}
+.profile-label {
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--amber-400);
+  margin-bottom: .6rem;
+}
+.profile-value {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1.25rem;
+  line-height: 1.3;
+}
+.profile-dims {
+  display: flex; flex-wrap: wrap; gap: .6rem;
+  margin-bottom: 1.25rem;
+}
+.dim-chip {
+  display: flex; align-items: center; gap: .4rem;
+  padding: .45rem .9rem;
+  border-radius: 100px;
+  font-size: .8rem;
+  font-weight: 500;
+  border: 1px solid currentColor;
+}
+.dim-chip.nivel { color: var(--amber-300); background: rgba(217,119,6,.12); }
+.dim-chip.locus { color: #60a5fa; background: rgba(96,165,250,.1); }
+.dim-chip.ae    { color: #a78bfa; background: rgba(167,139,250,.1); }
+
+.signals-summary {
+  background: var(--slate-950);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+}
+.signals-summary-title {
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--slate-400);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-bottom: .6rem;
+}
+.signal-item {
+  display: flex; align-items: flex-start; gap: .5rem;
+  font-size: .82rem;
+  color: var(--slate-300);
+  padding: .25rem 0;
+  line-height: 1.5;
+  border-bottom: 1px solid var(--slate-800);
+}
+.signal-item:last-child { border-bottom: none; }
+.signal-item-polo {
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  padding: .1rem .35rem;
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-top: .15rem;
+}
+
+/* ── ESTRATÉGIAS ────────────────────────────────────────────── */
+.strategy-section { margin-bottom: 1rem; }
+.strategy-section-title {
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--slate-400);
+  margin-bottom: .6rem;
+  padding-bottom: .4rem;
+  border-bottom: 1px solid var(--slate-800);
+}
+.strategy-item {
+  display: flex; align-items: flex-start; gap: .75rem;
+  padding: .6rem 0;
+  font-size: .88rem;
+  color: var(--slate-200);
+  line-height: 1.55;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.strategy-item:last-child { border-bottom: none; }
+.strategy-icon { flex-shrink: 0; font-size: 1rem; margin-top: .05rem; }
+.strategy-avoid {
+  color: var(--slate-400);
+  text-decoration: line-through;
+  text-decoration-color: rgba(220,38,38,.5);
+}
+.priority-badge {
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  padding: .1rem .4rem;
+  border-radius: 3px;
+  flex-shrink: 0;
+  font-weight: 500;
+  margin-top: .15rem;
+}
+.p1 { background: rgba(217,119,6,.2); color: var(--amber-300); }
+.p2 { background: rgba(96,165,250,.1); color: #93c5fd; }
+
+/* ── REFLEXÃO ───────────────────────────────────────────────── */
+.reflection-group { margin-bottom: 1.25rem; }
+.reflection-group-title {
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--amber-400);
+  margin-bottom: .6rem;
+  display: flex; align-items: center; gap: .5rem;
+}
+.reflection-group-title::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: var(--slate-800);
+}
+.reflection-q {
+  display: flex; align-items: flex-start; gap: .75rem;
+  padding: .75rem 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  font-size: .87rem;
+  color: var(--slate-200);
+  line-height: 1.65;
+}
+.reflection-q:last-child { border-bottom: none; }
+.q-num {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  color: var(--amber-400);
+  background: rgba(217,119,6,.1);
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 600;
+  margin-top: .1rem;
+}
+
+/* ── ALERTA / WARNING ───────────────────────────────────────── */
+.alert {
+  display: flex; align-items: flex-start; gap: .7rem;
+  padding: .85rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: .85rem;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+.alert-warning {
+  background: rgba(217,119,6,.1);
+  border: 1px solid rgba(217,119,6,.25);
+  color: var(--amber-300);
+}
+.alert-info {
+  background: rgba(96,165,250,.08);
+  border: 1px solid rgba(96,165,250,.2);
+  color: #93c5fd;
+}
+
+/* ── SEÇÃO OCULTA/VISÍVEL ───────────────────────────────────── */
+.section { display: none; }
+.section.visible {
+  display: block;
+  animation: fadeUp .4s ease both;
+}
+
+/* ── ANIMAÇÕES ──────────────────────────────────────────────── */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── CARDS DE TÉCNICA EXPANSÍVEIS ───────────────────────────── */
+.tecnicas-ref-bloco {
+  margin-top: 1.75rem;
+  border-top: 1px solid var(--slate-800);
+  padding-top: 1.25rem;
+}
+.tecnicas-ref-titulo {
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--slate-400);
+  margin-bottom: .9rem;
+  display: flex;
+  align-items: baseline;
+  gap: .75rem;
+  flex-wrap: wrap;
+}
+.tecnicas-ref-sub {
+  font-size: .72rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--slate-600);
+  font-style: italic;
+}
+.tecnica-card {
+  border: 1px solid var(--slate-800);
+  border-radius: var(--radius-sm);
+  margin-bottom: .5rem;
+  overflow: hidden;
+  transition: border-color var(--transition);
+}
+.tecnica-card.aberto {
+  border-color: var(--slate-600);
+}
+.tecnica-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .75rem 1rem;
+  background: var(--slate-800);
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background var(--transition);
+}
+.tecnica-toggle:hover { background: var(--slate-700); }
+.tecnica-card.aberto .tecnica-toggle { background: var(--slate-700); }
+.tecnica-nome {
+  font-family: var(--font-serif);
+  font-size: .92rem;
+  font-weight: 600;
+  color: var(--slate-100);
+  flex: 1;
+}
+.tecnica-ref {
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  color: var(--amber-400);
+  background: rgba(217,119,6,.1);
+  padding: .15rem .45rem;
+  border-radius: 3px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.tecnica-chevron {
+  font-size: .7rem;
+  color: var(--slate-400);
+  transition: transform var(--transition);
+  flex-shrink: 0;
+}
+.tecnica-card.aberto .tecnica-chevron { transform: rotate(90deg); }
+.tecnica-body {
+  display: none;
+  padding: 1rem 1.1rem;
+  background: rgba(19,28,46,.6);
+  border-top: 1px solid var(--slate-800);
+}
+.tecnica-card.aberto .tecnica-body { display: block; }
+.tecnica-field { margin-bottom: .9rem; }
+.tecnica-field:last-child { margin-bottom: 0; }
+.tecnica-field-label {
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--amber-400);
+  margin-bottom: .3rem;
+}
+.tecnica-field-text {
+  font-size: .85rem;
+  color: var(--slate-200);
+  line-height: 1.65;
+  text-align: justify;
+}
+.tecnica-exemplo {
+  font-style: italic;
+  color: var(--slate-400);
+  border-left: 2px solid var(--slate-700);
+  padding-left: .75rem;
+}
+
+/* ── RESET BUTTON ───────────────────────────────────────────── */
+.reset-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  display: flex; justify-content: center;
+  padding: 1rem;
+  background: linear-gradient(to top, var(--slate-950) 60%, transparent);
+}
+
+/* ── RESPONSIVO ─────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .app { padding: 1rem 1rem 5rem; }
+  .card { padding: 1.25rem; }
+  .triforked { flex-direction: column; }
+  .tri-option { flex: none; }
+}
+
+/* ── DIVIDER ────────────────────────────────────────────────── */
+.divider {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--slate-700), transparent);
+  margin: 1.5rem 0;
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-eyebrow">Preceptoria em MFC</div>
+    <h1>Comunica<span>MFC</span></h1>
+    <p class="header-sub">Sistema de classificação do perfil comunicacional do paciente, baseado no Modelo de Influência Interpessoal de Borrell Carrió (2012).</p>
+  </header>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-step active" id="pstep-1">
+      <div class="step-dot">1</div>
+      <span class="step-label">Pirâmide</span>
+    </div>
+    <div class="progress-line" id="pline-12" style="--fill:0%"></div>
+    <div class="progress-step" id="pstep-2">
+      <div class="step-dot">2</div>
+      <span class="step-label">Locus</span>
+    </div>
+    <div class="progress-line" id="pline-23" style="--fill:0%"></div>
+    <div class="progress-step" id="pstep-3">
+      <div class="step-dot">3</div>
+      <span class="step-label">Autoestima</span>
+    </div>
+    <div class="progress-line" id="pline-34" style="--fill:0%"></div>
+    <div class="progress-step" id="pstep-4">
+      <div class="step-dot">4</div>
+      <span class="step-label">Perfil</span>
+    </div>
+    <div class="progress-line" id="pline-45" style="--fill:0%"></div>
+    <div class="progress-step" id="pstep-5">
+      <div class="step-dot">5</div>
+      <span class="step-label">Estratégias</span>
+    </div>
+    <div class="progress-line" id="pline-56" style="--fill:0%"></div>
+    <div class="progress-step" id="pstep-6">
+      <div class="step-dot">6</div>
+      <span class="step-label">Reflexão</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       MÓDULO 1 — PIRÂMIDE DA MUDANÇA
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="section visible" id="sec-piramide">
+    <div class="card">
+      <div class="card-title">
+        Dimensão 1 — Pirâmide da Mudança
+        <span class="badge">Nível de receptividade</span>
+      </div>
+      <div class="card-subtitle">Árvore de decisão sequencial — responda os blocos em ordem. A primeira confirmação define o nível.</div>
+      <div class="card-quote">
+        "Não temos um teste diagnóstico para distinguir entre os dois perfis, e é o fracasso contínuo que nos fará qualificar um paciente como resistente." — Borrell Carrió (2012, p. 158)
+      </div>
+
+      <!-- BLOCO A -->
+      <div style="margin-bottom:1.25rem">
+        <div style="font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--slate-400);margin-bottom:.6rem;">
+          Bloco A — Triagem de resistência
+        </div>
+
+        <div class="question-block">
+          <div class="question-header">
+            <span class="question-code">A1</span>
+            <span class="question-text">O paciente recusou explicitamente discutir o tema de saúde em questão?</span>
+          </div>
+          <div class="signals">
+            <label class="signal-label"><input type="checkbox" data-block="A" data-id="a1s1"><div class="signal-box"></div><span class="signal-text">Expressou recusa verbal direta ("Não quero falar sobre isso agora")</span></label>
+            <label class="signal-label"><input type="checkbox" data-block="A" data-id="a1s2"><div class="signal-box"></div><span class="signal-text">Desviou o tema ativamente a cada tentativa de abordagem</span></label>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-header">
+            <span class="question-code">A2</span>
+            <span class="question-text">O paciente apresentou esquemas defensivos já ensaiados — argumentos prontos, como se esse diálogo já tivesse ocorrido antes?</span>
+          </div>
+          <div class="signals">
+            <label class="signal-label"><input type="checkbox" data-block="A" data-id="a2s1"><div class="signal-box"></div><span class="signal-text">Utilizou frases que parecem "pré-fabricadas" ("Já me disseram isso mil vezes")</span></label>
+            <label class="signal-label"><input type="checkbox" data-block="A" data-id="a2s2"><div class="signal-box"></div><span class="signal-text">Respondeu de forma automática, sem elaborar</span></label>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-header">
+            <span class="question-code">A3</span>
+            <span class="question-text">Há registro de tentativas anteriores (suas ou de outros profissionais) de abordar esse tema, todas sem resultado duradouro?</span>
+          </div>
+          <div class="signals">
+            <label class="signal-label"><input type="checkbox" data-block="A" data-id="a3s1"><div class="signal-box"></div><span class="signal-text">Prontuário ou histórico registra abordagens anteriores sem adesão</span></label>
+            <label class="signal-label"><input type="checkbox" data-block="A" data-id="a3s2"><div class="signal-box"></div><span class="signal-text">O próprio paciente relata ter sido "aconselhado muito" sem efeito</span></label>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-header">
+            <span class="question-code">A4</span>
+            <span class="question-text">A intervenção verbal produziu efeito oposto — mais fechamento a cada tentativa?</span>
+          </div>
+          <div class="signals">
+            <label class="signal-label"><input type="checkbox" data-block="A" data-id="a4s1"><div class="signal-box"></div><span class="signal-text">A resistência aumentou visivelmente quando o tema foi aprofundado</span></label>
+            <label class="signal-label"><input type="checkbox" data-block="A" data-id="a4s2"><div class="signal-box"></div><span class="signal-text">O paciente encerrou ou tentou encerrar o diálogo ao ser questionado</span></label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- BLOCO B -->
+      <div style="margin-bottom:1.25rem">
+        <div style="font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--slate-400);margin-bottom:.6rem;">
+          Bloco B — Triagem de ambivalência
+        </div>
+
+        <div class="question-block">
+          <div class="question-header">
+            <span class="question-code">B1</span>
+            <span class="question-text">O paciente reconheceu, ainda que parcialmente, que o hábito pode ser prejudicial?</span>
+          </div>
+          <div class="signals">
+            <label class="signal-label"><input type="checkbox" data-block="B" data-id="b1s1"><div class="signal-box"></div><span class="signal-text">Admitiu que "talvez" o hábito não faça bem</span></label>
+            <label class="signal-label"><input type="checkbox" data-block="B" data-id="b1s2"><div class="signal-box"></div><span class="signal-text">Demonstrou consciência do risco, mas minimizou</span></label>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-header">
+            <span class="question-code">B2</span>
+            <span class="question-text">O paciente expressou ambivalência — reconhece o problema e apresenta justificativas para não mudar ao mesmo tempo?</span>
+          </div>
+          <div class="signals">
+            <label class="signal-label"><input type="checkbox" data-block="B" data-id="b2s1"><div class="signal-box"></div><span class="signal-text">Usou "mas..." após reconhecer o problema ("Sei que devo parar, mas...")</span></label>
+            <label class="signal-label"><input type="checkbox" data-block="B" data-id="b2s2"><div class="signal-box"></div><span class="signal-text">Concordou verbalmente mas demonstrou dúvida no tom ou na postura</span></label>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-header">
+            <span class="question-code">B3</span>
+            <span class="question-text">Quando explorada a motivação, o paciente demonstrou preocupação com o futuro?</span>
+          </div>
+          <div class="signals">
+            <label class="signal-label"><input type="checkbox" data-block="B" data-id="b3s1"><div class="signal-box"></div><span class="signal-text">Citou consequências futuras espontaneamente ou quando estimulado</span></label>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-header">
+            <span class="question-code">B4</span>
+            <span class="question-text">O paciente já tentou mudar antes, mesmo sem sucesso duradouro?</span>
+          </div>
+          <div class="signals">
+            <label class="signal-label"><input type="checkbox" data-block="B" data-id="b4s1"><div class="signal-box"></div><span class="signal-text">Relatou tentativas anteriores de mudança, ainda que frustradas</span></label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- BLOCO C -->
+      <div style="margin-bottom:1.25rem">
+        <div style="font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--slate-400);margin-bottom:.6rem;">
+          Bloco C — Confirmação de abertura
+        </div>
+
+        <div class="question-block">
+          <div class="question-header">
+            <span class="question-code">C1</span>
+            <span class="question-text">O paciente acolheu a orientação sem resistência significativa?</span>
+          </div>
+          <div class="signals">
+            <label class="signal-label"><input type="checkbox" data-block="C" data-id="c1s1"><div class="signal-box"></div><span class="signal-text">Recebeu o conselho sem contestação ou esquiva</span></label>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-header">
+            <span class="question-code">C2</span>
+            <span class="question-text">O paciente fez perguntas sobre como implementar a mudança (foco no "como", não no "se")?</span>
+          </div>
+          <div class="signals">
+            <label class="signal-label"><input type="checkbox" data-block="C" data-id="c2s1"><div class="signal-box"></div><span class="signal-text">Perguntou sobre etapas práticas, doses, frequência ou recursos</span></label>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <div class="question-header">
+            <span class="question-code">C3</span>
+            <span class="question-text">O paciente demonstrou percepção de autoeficácia — acredita que é capaz de mudar?</span>
+          </div>
+          <div class="signals">
+            <label class="signal-label"><input type="checkbox" data-block="C" data-id="c3s1"><div class="signal-box"></div><span class="signal-text">Expressou confiança na própria capacidade ("Se eu decidir, consigo")</span></label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="btn-actions">
+        <button class="btn btn-primary" onclick="calcularNivel()">Classificar nível → <span style="font-size:1rem">→</span></button>
+      </div>
+      <div id="nivel-result" style="margin-top:.75rem;display:none"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       MÓDULO 1 — LOCUS DE CONTROLE
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="section" id="sec-locus">
+    <div class="card">
+      <div class="card-title">
+        Dimensão 2 — Locus de Controle
+        <span class="badge">Percepção de agência</span>
+      </div>
+      <div class="card-subtitle">Marque os sinais observados e selecione a síntese para cada pergunta.</div>
+      <div class="card-quote">
+        "Falaremos de locus de controle interno quando a pessoa acredita que é capaz de transformar a realidade à sua volta; externo, quando atribui sua vida a fatores imodificáveis." — Borrell Carrió (2012, p. 162)
+      </div>
+
+      <div id="locus-questions"></div>
+
+      <div class="btn-actions">
+        <button class="btn btn-ghost" onclick="voltarPara('sec-piramide', 1)">← Voltar</button>
+        <button class="btn btn-primary" onclick="calcularLocus()">Classificar locus →</button>
+      </div>
+      <div id="locus-result" style="margin-top:.75rem;display:none"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       MÓDULO 1 — AUTOESTIMA
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="section" id="sec-ae">
+    <div class="card">
+      <div class="card-title">
+        Dimensão 3 — Autoestima
+        <span class="badge">Energia para a mudança</span>
+      </div>
+      <div class="card-subtitle">Marque os sinais observados e selecione a síntese para cada pergunta.</div>
+      <div class="card-quote">
+        "A autoestima é o referencial simbólico que nos situa no mundo e nos faz acreditar que somos importantes. Sem autoestima, o entusiasmo necessário para a mudança não se sustenta." — Borrell Carrió (2012, p. 161)
+      </div>
+
+      <div id="ae-questions"></div>
+
+      <div class="btn-actions">
+        <button class="btn btn-ghost" onclick="voltarPara('sec-locus', 2)">← Voltar</button>
+        <button class="btn btn-primary" onclick="calcularAE()">Gerar perfil →</button>
+      </div>
+      <div id="ae-result" style="margin-top:.75rem;display:none"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       PERFIL COMBINADO
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="section" id="sec-perfil">
+    <div id="perfil-output"></div>
+    <div class="btn-actions">
+      <button class="btn btn-ghost" onclick="voltarPara('sec-ae', 3)">← Voltar</button>
+      <button class="btn btn-primary" onclick="irParaEstrategias()">Ver estratégias →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       MÓDULO 2 — ESTRATÉGIAS
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="section" id="sec-estrategias">
+    <div class="card">
+      <div class="card-title">
+        Módulo 2 — Estratégias de Comunicação
+        <span class="badge">Baseado no perfil</span>
+      </div>
+      <div id="estrategias-output"></div>
+      <div class="btn-actions">
+        <button class="btn btn-ghost" onclick="voltarPara('sec-perfil', 4)">← Voltar</button>
+        <button class="btn btn-primary" onclick="irParaReflexao()">Perguntas reflexivas →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       MÓDULO 3 — REFLEXÃO
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="section" id="sec-reflexao">
+    <div class="card">
+      <div class="card-title">
+        Módulo 3 — Reflexão para Preceptoria
+        <span class="badge">Discussão residente–preceptor</span>
+      </div>
+      <div class="card-subtitle">Perguntas para orientar a discussão após a consulta.</div>
+      <div id="reflexao-output"></div>
+      <div class="btn-actions">
+        <button class="btn btn-ghost" onclick="voltarPara('sec-estrategias', 5)">← Voltar</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- RESET -->
+<div class="reset-bar">
+  <button class="btn btn-ghost" onclick="resetar()" style="font-size:.8rem;padding:.5rem 1.2rem">
+    ↺ Nova consulta
+  </button>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// ESTADO GLOBAL
+// ═══════════════════════════════════════════════════════════════
+const state = {
+  nivel: null,
+  locus: null,
+  ae:    null,
+  aviso: '',
+  sinaisMarcados: [],
+};
+
+// ═══════════════════════════════════════════════════════════════
+// DADOS — LOCUS DE CONTROLE
+// ═══════════════════════════════════════════════════════════════
+const locusQs = [
+  {
+    id: 'D1', texto: 'Como o paciente explicou a origem da sua condição ou hábito?',
+    opA: 'Fatores internos — decisões e comportamentos próprios',
+    opB: 'Combinação de fatores pessoais e externos',
+    opC: 'Fatores externos, fora do seu controle',
+    sinais: [
+      { texto: 'Atribuiu a condição a comportamentos próprios ("Eu exagerei na alimentação")', polo: 'A' },
+      { texto: 'Reconheceu que suas decisões contribuíram para a situação', polo: 'A' },
+      { texto: 'Citou fatores externos mas reconheceu ter parte na situação', polo: 'B' },
+      { texto: 'Atribuiu predominantemente a genética, sorte ou circunstâncias', polo: 'C' },
+      { texto: 'Negou qualquer relação entre seus comportamentos e a condição', polo: 'C' },
+    ],
+  },
+  {
+    id: 'D2', texto: 'Ao falar em mudança, a quem atribuiu a possibilidade de sucesso?',
+    opA: 'A si mesmo — depende da sua decisão e esforço',
+    opB: 'A si mesmo, condicionado a apoio externo',
+    opC: 'A fatores fora do seu controle',
+    sinais: [
+      { texto: 'Expressou que a mudança depende da sua própria decisão', polo: 'A' },
+      { texto: 'Demonstrou senso de agência ("Se eu quiser, consigo")', polo: 'A' },
+      { texto: 'Condicionou a mudança a apoio familiar ou mudança de contexto', polo: 'B' },
+      { texto: 'Atribuiu a possibilidade de mudança a fatores além do seu controle', polo: 'C' },
+      { texto: 'Expressou sensação de impotência diante da mudança', polo: 'C' },
+    ],
+  },
+  {
+    id: 'D3', texto: 'Como o paciente interpretou tentativas anteriores de mudança?',
+    opA: 'Atribuiu o resultado à sua própria conduta',
+    opB: 'Combinação de esforço pessoal e circunstâncias',
+    opC: 'Fatores externos ou características imutáveis de si mesmo',
+    sinais: [
+      { texto: 'Atribuiu sucesso anterior ao próprio esforço e disciplina', polo: 'A' },
+      { texto: 'Atribuiu resultado a uma combinação de esforço e circunstâncias', polo: 'B' },
+      { texto: 'Atribuiu fracasso a fatores externos ("minha família não ajudou")', polo: 'C' },
+      { texto: 'Atribuiu fracasso a características imutáveis ("não tenho força de vontade")', polo: 'C' },
+      { texto: 'Não relatou tentativas anteriores (não entra no cômputo)', polo: 'N' },
+    ],
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// DADOS — AUTOESTIMA
+// ═══════════════════════════════════════════════════════════════
+const aeQs = [
+  {
+    id: 'E1', texto: 'Qual foi o tom narrativo predominante do paciente ao falar de si mesmo?',
+    opA: 'Autoconfiante — narrativa de agência pessoal',
+    opB: 'Ambíguo — sem consistência clara entre esperança e resignação',
+    opC: 'Resignado, autodepreciativo ou indiferente',
+    sinais: [
+      { texto: 'Narrativa de superação pessoal ("Já passei por coisa pior")', polo: 'A' },
+      { texto: 'Expressou senso de capacidade em relação à mudança', polo: 'A' },
+      { texto: 'Demonstrou curiosidade ou abertura para novas possibilidades', polo: 'A' },
+      { texto: 'Narrativa ambígua — ora esperançosa, ora resignada', polo: 'B' },
+      { texto: 'Aceitou orientações sem convicção ("Vou tentar, mas não sei")', polo: 'B' },
+      { texto: 'Expressões de incapacidade generalizada ("Nunca consigo nada")', polo: 'C' },
+      { texto: 'Tom resignado ou indiferente em relação à própria saúde', polo: 'C' },
+    ],
+  },
+  {
+    id: 'E2', texto: 'O paciente demonstrou senso de propósito, vínculo afetivo ou valor pessoal mobilizável?',
+    opA: 'Sim, de forma clara e espontânea',
+    opB: 'Sim, mas de forma frágil ou apenas quando estimulado',
+    opC: 'Não demonstrou — ou o tema foi evitado',
+    sinais: [
+      { texto: 'Citou espontaneamente razões pessoais para cuidar da saúde', polo: 'A' },
+      { texto: 'Demonstrou que algo ou alguém é importante o suficiente para motivar mudança', polo: 'A' },
+      { texto: 'Expressou propósito apenas quando diretamente estimulado', polo: 'B' },
+      { texto: 'O vínculo ou propósito citado pareceu frágil ou pouco consistente', polo: 'B' },
+      { texto: 'Não demonstrou senso de propósito identificável', polo: 'C' },
+      { texto: 'Evitou o tema de motivação pessoal quando abordado', polo: 'C' },
+    ],
+  },
+  {
+    id: 'E3', texto: 'Como o paciente reagiu diante da possibilidade concreta de mudança?',
+    opA: 'Com abertura e algum nível de entusiasmo ou curiosidade',
+    opB: 'Com ambivalência — reconheceu a possibilidade mas sem convicção',
+    opC: 'Com resignação, ceticismo ou esquiva',
+    sinais: [
+      { texto: 'Demonstrou abertura ou curiosidade diante da proposta', polo: 'A' },
+      { texto: 'Fez perguntas sobre como implementar a mudança', polo: 'A' },
+      { texto: 'Reconheceu a possibilidade mas sem convicção clara', polo: 'B' },
+      { texto: 'Disse que vai tentar, mas o tom indicou pouca crença', polo: 'B' },
+      { texto: 'Reagiu com ceticismo explícito ("Já tentei, não adianta")', polo: 'C' },
+      { texto: 'Demonstrou resignação ou esquiva diante da proposta', polo: 'C' },
+    ],
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// DADOS — ESTRATÉGIAS
+// ═══════════════════════════════════════════════════════════════
+const estrategias = {
+  'N1·Interno·Preservada':  { p1:'Conselho explícito confrontativo', p2:'Persuasão confrontativa', mod:'Nomear explicitamente a capacidade do paciente — reforço de autoeficácia', evitar:'Abordagem motivacional (desnecessária e pode soar condescendente)' },
+  'N1·Misto·Preservada':    { p1:'Conselho explícito confrontativo', p2:'Persuasão confrontativa', mod:'Citar a rede de apoio como aliada, não como condição', evitar:'Ignorar os vínculos externos que o paciente valoriza' },
+  'N1·Externo·Preservada':  { p1:'Conselho explícito com identificação grupal', p2:'Modelagem de comportamento como reforço', mod:'"Quase todos os meus pacientes nessa situação..." — âncora grupal reduz dependência do LC-Ext', evitar:'Argumento centrado na autonomia individual (não ressoa com LC-Ext)' },
+  'N1·Interno·Parcial':     { p1:'Conselho explícito + reforço de autoeficácia', p2:'Persuasão confrontativa com normalização', mod:'Nomear experiências passadas de sucesso antes de propor o plano', evitar:'Crítica ou avaliação negativa de tentativas anteriores' },
+  'N1·Misto·Parcial':       { p1:'Conselho explícito + validação do contexto', p2:'Persuasão confrontativa com legitimação', mod:'Equilibrar responsabilidade pessoal e recursos externos disponíveis', evitar:'Atribuir toda a responsabilidade ao paciente' },
+  'N1·Externo·Parcial':     { p1:'Conselho explícito com modelagem', p2:'Identificação grupal + reforço externo', mod:'Plano concreto e estruturado — LC-Ext responde melhor a estrutura do que a apelos à autonomia', evitar:'Discurso de autonomia pessoal; pressão por decisão imediata' },
+  'N1·Interno·Comprometida':{ p1:'Conselho explícito + reforço de autoeficácia', p2:'Persuasão confrontativa com normalização', mod:'Restaurar senso de valor antes de propor o plano', evitar:'Linguagem que possa soar como crítica ou avaliação' },
+  'N1·Misto·Comprometida':  { p1:'Conselho explícito + validação + reforço', p2:'Identificação grupal', mod:'Equilibrar validação do contexto externo com reforço da autoestima', evitar:'Atribuir responsabilidade antes de restaurar autoestima' },
+  'N1·Externo·Comprometida':{ p1:'Identificação grupal + reforço externo', p2:'Modelagem de comportamento', mod:'Plano estruturado; referências coletivas como âncora; evitar apelos à decisão pessoal', evitar:'Argumento de autonomia; qualquer linguagem que possa soar como crítica' },
+
+  'N2·Interno·Preservada':  { p1:'Persuasão motivacional — criar divergência', p2:'Exploração de consequências das crenças atuais', mod:'Evocar valores e projetos de vida do próprio paciente como motor', evitar:'Conselho diretivo — ativa resistência em quem tem LC-Int forte' },
+  'N2·Interno·Parcial':     { p1:'Persuasão motivacional + reforço de autoeficácia', p2:'Favorecer autoeficácia antes de criar divergência', mod:'"O simples fato de ter vindo aqui já é um passo" — reforçar antes de explorar ambivalências', evitar:'Criar divergência prematuramente antes de estabilizar a autoestima' },
+  'N2·Interno·Comprometida':{ p1:'Reforço de autoestima como pré-condição', p2:'Persuasão motivacional somente após estabilização', mod:'Restaurar dignidade e senso de valor antes de qualquer proposta de mudança', evitar:'Qualquer técnica persuasiva antes de trabalhar a autoestima; linguagem que possa soar como crítica' },
+  'N2·Misto·Preservada':    { p1:'Persuasão motivacional + absorver resistência', p2:'Legitimar e normalizar divergência', mod:'Explorar quem ou o quê poderia apoiar a mudança — citar a rede como recurso real', evitar:'Ignorar os condicionantes externos citados pelo paciente' },
+  'N2·Misto·Parcial':       { p1:'Persuasão motivacional com normalização', p2:'Reforço de autoeficácia + identificação de suporte', mod:'Validar o contexto externo e nomear recursos internos — equilíbrio explícito', evitar:'Pressionar por autonomia ou por dependência' },
+  'N2·Misto·Comprometida':  { p1:'Reforço de autoestima + legitimação do contexto', p2:'Conselho inoculado como semente inicial', mod:'Não iniciar persuasão formal — plantar ideia sem esperar debate', evitar:'Técnicas que exijam elaboração cognitiva complexa; criação de divergência' },
+  'N2·Externo·Preservada':  { p1:'Persuasão motivacional com âncora grupal', p2:'Identificação grupal + criação de divergência indireta', mod:'"Muitas pessoas nessa situação..." — a âncora grupal substitui o LC-Int ausente', evitar:'Argumentos centrados em autonomia e decisão pessoal' },
+  'N2·Externo·Parcial':     { p1:'Conselho inoculado + identificação grupal', p2:'Reforço de autoeficácia com exemplos externos', mod:'Estruturar abordagem em torno de referências externas positivas antes de qualquer apelo à decisão pessoal', evitar:'Discurso de responsabilidade individual; criação de divergência direta' },
+  'N2·Externo·Comprometida':{ p1:'Conselho inoculado como única intervenção verbal', p2:'Modelagem de comportamento como suporte externo', mod:'A palavra deve ser mínima, indireta e não ameaçadora; planejar suporte externo concreto', evitar:'Qualquer forma de persuasão direta ou criação de divergência' },
+
+  'N3·Interno·Preservada':  { p1:'Conselho inoculado', p2:'Negociação por deslizamento', mod:'Semear sem cobrar — o LC-Int pode mobilizar mudança futura se não houver pressão', evitar:'Qualquer confrontação direta; insistência verbal' },
+  'N3·Interno·Parcial':     { p1:'Conselho inoculado', p2:'Negociação por deslizamento com cedência intencional', mod:'Ceder em um ponto para preservar a aliança terapêutica (Carrió, 2012, p. 170)', evitar:'Argumentação lógica; criação de divergência explícita' },
+  'N3·Interno·Comprometida':{ p1:'Conselho inoculado mínimo', p2:'Modelagem de comportamento + suporte externo', mod:'Priorizar vínculo e manutenção da relação sobre qualquer objetivo de mudança imediata', evitar:'Qualquer intervenção que coloque o paciente em posição de fracasso' },
+  'N3·Misto·Preservada':    { p1:'Conselho inoculado + abertura para deslizamento', p2:'Monitorar sinais de abertura ao longo do tempo', mod:'O componente misto deixa uma janela — revisar periodicamente se o paciente migrou para N2', evitar:'Tratar como N2 prematuramente' },
+  'N3·Misto·Parcial':       { p1:'Conselho inoculado mínimo', p2:'Modelagem de comportamento', mod:'Preservar vínculo; semear sem cobrar; revisar periodicamente', evitar:'Persuasão verbal de qualquer tipo' },
+  'N3·Misto·Comprometida':  { p1:'Modelagem de comportamento + suporte de tutela', p2:'Manutenção do vínculo como único objetivo de curto prazo', mod:'Objetivo realista: não perder o paciente do sistema de cuidado', evitar:'Qualquer meta de mudança comportamental no curto prazo' },
+  'N3·Externo·Preservada':  { p1:'Modelagem de comportamento', p2:'Negociação por deslizamento', mod:'Estruturar ambiente e estímulos externos como agentes de mudança no lugar da palavra', evitar:'Persuasão verbal de qualquer tipo' },
+  'N3·Externo·Parcial':     { p1:'Modelagem de comportamento', p2:'Sistemas de tutela e lembretes estruturados', mod:'Sistemas de tutelagem e lembretes automatizados (Carrió, 2012, p. 159)', evitar:'Conselho explícito; criação de divergência' },
+  'N3·Externo·Comprometida':{ p1:'Modelagem de comportamento + suporte de tutela', p2:'Manutenção do vínculo como único objetivo de curto prazo', mod:'Objetivo realista: não perder o paciente do sistema de cuidado', evitar:'Qualquer meta de mudança comportamental no curto prazo' },
+};
+
+// ═══════════════════════════════════════════════════════════════
+// DADOS — REFLEXÃO
+// ═══════════════════════════════════════════════════════════════
+const reflexaoFixa = {
+  A: [
+    'Quais sinais concretos durante a consulta indicaram o nível de receptividade do paciente? Você poderia ter confundido concordância superficial com abertura real?',
+    'Em algum momento o paciente deu uma abertura que você não aproveitou — uma hesitação, uma contradição, um "mas..."? O que poderia ter sido feito ali?',
+  ],
+  B: [
+    'O conselho ou a abordagem escolhida foi adaptada à linguagem e à realidade existencial desse paciente específico, ou foi uma orientação genérica?',
+    'Quando o paciente apresentou resistência, você a absorveu ou a confrontou? O que aconteceu com o clima emocional da consulta a cada tentativa?',
+    'Você verificou a compreensão do paciente ao final? De que forma — e se não verificou, o que isso pode significar para a adesão?',
+  ],
+  C: [
+    'A orientação foi feita para o bem-estar do paciente ou havia algum componente de conforto próprio — a sensação de "cumprir o papel de dar o conselho"?',
+    'Em algum momento a consulta saiu do território da persuasão virtuosa e entrou no da manipulação? Carrió define manipulação como usar "meias verdades" ou ocultar incertezas.',
+    'O esforço de persuasão foi feito para o paciente ou sobre o paciente? Como você distingue esses dois modos na prática clínica?',
+  ],
+};
+
+const reflexaoEspecifica = {
+  N1: {
+    'Interno·Preservada': [
+      'Esse paciente já tem os recursos internos para mudar. O que você fez para nomear e reforçar explicitamente essa capacidade, em vez de apenas transmitir informação técnica?',
+      'Existe o risco de subestimar esse paciente por ele ser "fácil"? Como garantir que a consulta foi igualmente cuidadosa?',
+    ],
+    'Externo·Preservada': [
+      'Você percebeu que esse paciente responde melhor a referências grupais do que a apelos à autonomia individual? A orientação usou linguagem de identificação coletiva ou foi centrada em decisão pessoal?',
+    ],
+    default: [
+      'Antes de propor o plano terapêutico, você nomeou alguma experiência anterior de sucesso do paciente? Se não, como isso poderia ter mudado o tom da consulta?',
+      'Houve alguma frase sua que, ao rever, poderia ter soado como avaliação negativa de tentativas anteriores?',
+    ],
+  },
+  N2: {
+    'Interno·Preservada': [
+      'Esse paciente tem motivação interna disponível. Você conseguiu evocar os valores e projetos de vida dele como motor da mudança, ou ficou no plano técnico-clínico?',
+      'A autonomia desse paciente exige que ele "convença a si mesmo". Em que momento da consulta você se colocou como facilitador desse processo — e não como o autor do argumento?',
+    ],
+    'Interno·Comprometida': [
+      'Você identificou que esse paciente não tinha energia disponível para considerar a mudança? Sem autoestima mínima, a mudança não tem combustível. O que você fez para restaurar essa condição antes de persuadir?',
+      'Reveja suas palavras durante a consulta. Alguma delas, mesmo bem-intencionada, pode ter soado como crítica ou confirmação da incapacidade que o paciente já sente?',
+    ],
+    'Externo·Preservada': [
+      'Argumentos centrados em autonomia e decisão pessoal não ressoam em pacientes com locus externo. Que referências externas estavam disponíveis nesse caso e poderiam ter sido mobilizadas?',
+    ],
+    'Externo·Comprometida': [
+      'O conselho inoculado era a única intervenção verbal segura aqui. Você chegou a usá-lo? Se sim, como foi formulado? Se não, o que foi tentado em seu lugar e com que resultado?',
+    ],
+    default: [
+      'Esse perfil exige equilíbrio explícito entre validar o contexto externo e nomear recursos internos. Você fez os dois — ou pendeu para um dos lados? Qual foi o efeito perceptível no paciente?',
+    ],
+  },
+  N3: {
+    default: [
+      'Como você distinguiu resistência estabelecida de pré-contemplação ainda em formação? Você tem histórico suficiente desse paciente para essa classificação?',
+      'Manter o vínculo com um paciente resistente sem forçar mudança é em si uma postura ética e terapêutica. Você conseguiu sair da consulta sem que o paciente se sentisse julgado, fracassado ou descartado?',
+      'Você sentiu frustração durante a consulta? Como essa frustração pode ter influenciado seu tom, suas palavras ou sua postura — e como isso pode ter sido lido pelo paciente?',
+      'Se você fosse esse paciente — com essa história, esse locus de controle e esse nível de autoestima —, o que você precisaria ouvir, ou não ouvir, para considerar voltar nessa consulta?',
+    ],
+    'Interno·Preservada': [
+      'O conselho inoculado tem mais chance de criar uma fissura futura nesse perfil. Você plantou alguma ideia sem exigir debate imediato? Como você avaliará em consultas futuras se ela germinou?',
+    ],
+    'Externo·Comprometida': [
+      'O objetivo realista aqui é não perder o paciente do sistema de cuidado. Como você avalia o vínculo ao final dessa consulta — ele está mais ou menos sólido do que antes?',
+    ],
+  },
+};
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER — PERGUNTAS TRIFURCADAS
+// ═══════════════════════════════════════════════════════════════
+function renderQs(qs, containerId, prefix) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  qs.forEach(q => {
+    const block = document.createElement('div');
+    block.className = 'question-block';
+    block.style.marginBottom = '.75rem';
+
+    let sinaisHTML = q.sinais.map(s => `
+      <label class="signal-label">
+        <input type="checkbox" data-q="${prefix}-${q.id}" data-polo="${s.polo}">
+        <div class="signal-box"></div>
+        <span class="signal-text">${s.texto}</span>
+        <span class="signal-polo polo-${s.polo}">${s.polo}</span>
+      </label>`).join('');
+
+    block.innerHTML = `
+      <div class="question-header">
+        <span class="question-code">${q.id}</span>
+        <span class="question-text">${q.texto}</span>
+      </div>
+      <div class="signals">${sinaisHTML}</div>
+      <div class="triforked" id="tri-${prefix}-${q.id}">
+        <div class="tri-label">Síntese — selecione o polo predominante:</div>
+        <button class="tri-option" data-q="${prefix}-${q.id}" data-polo="A" onclick="selecionarPolo(this)">${q.opA}</button>
+        <button class="tri-option" data-q="${prefix}-${q.id}" data-polo="B" onclick="selecionarPolo(this)">${q.opB}</button>
+        <button class="tri-option" data-q="${prefix}-${q.id}" data-polo="C" onclick="selecionarPolo(this)">${q.opC}</button>
+        ${q.id === 'D3' ? `<button class="tri-option" data-q="${prefix}-${q.id}" data-polo="N" onclick="selecionarPolo(this)">Não relatou tentativas anteriores</button>` : ''}
+      </div>`;
+
+    container.appendChild(block);
+  });
+}
+
+function selecionarPolo(btn) {
+  const q = btn.dataset.q;
+  document.querySelectorAll(`.tri-option[data-q="${q}"]`).forEach(b => {
+    b.className = 'tri-option';
+  });
+  btn.classList.add(`selected-${btn.dataset.polo}`);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// NAVEGAÇÃO
+// ═══════════════════════════════════════════════════════════════
+function mostrarSecao(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('visible'));
+  const sec = document.getElementById(id);
+  sec.classList.add('visible');
+  sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function atualizarProgress(step) {
+  for (let i = 1; i <= 6; i++) {
+    const ps = document.getElementById(`pstep-${i}`);
+    ps.classList.remove('active', 'done');
+    if (i < step) ps.classList.add('done');
+    else if (i === step) ps.classList.add('active');
+  }
+  const lines = { 12:1, 23:2, 34:3, 45:4, 56:5 };
+  Object.entries(lines).forEach(([pair, threshold]) => {
+    const line = document.getElementById(`pline-${pair}`);
+    if (line) line.style.setProperty('--fill', step > threshold ? '100%' : '0%');
+  });
+}
+
+function voltarPara(secId, step) {
+  mostrarSecao(secId);
+  atualizarProgress(step);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CLASSIFICAÇÃO — NÍVEL
+// ═══════════════════════════════════════════════════════════════
+function calcularNivel() {
+  const marcadosA = [...document.querySelectorAll('input[data-block="A"]:checked')];
+  const marcadosB = [...document.querySelectorAll('input[data-block="B"]:checked')];
+  const marcadosC = [...document.querySelectorAll('input[data-block="C"]:checked')];
+
+  const temA3 = marcadosA.some(c => c.dataset.id === 'a3s1' || c.dataset.id === 'a3s2');
+  const outroA = marcadosA.some(c => c.dataset.id !== 'a3s1' && c.dataset.id !== 'a3s2');
+
+  let nivel;
+  state.aviso = '';
+
+  // N3 confirmado: A3 + qualquer outro
+  if (temA3 && (outroA || marcadosA.length >= 2)) {
+    nivel = 3;
+  // A1 ou A2 isolados sem A3: classificar como N3 com ressalva de possível N2
+  } else if (marcadosA.length >= 1 && !temA3) {
+    nivel = 3;
+    state.aviso = 'Os sinais marcados (A1 e/ou A2, sem A3) indicam resistência incipiente. O paciente foi classificado como Nível 3, porém com baixa acurácia. Com as informações disponíveis, é possível que o paciente se enquadre no perfil Nível 2. Recomenda-se confirmar com o histórico do paciente e reavaliar em consultas subsequentes.';
+  // N2: 2+ itens de B, sem critério N3
+  } else if (marcadosB.length >= 2) {
+    nivel = 2;
+  // N1: 2+ itens de C
+  } else if (marcadosC.length >= 2) {
+    nivel = 1;
+  } else {
+    nivel = null;
+  }
+
+  if (nivel === null) {
+    const div = document.getElementById('nivel-result');
+    div.style.display = 'block';
+    div.innerHTML = `<div class="alert alert-warning"><span>Sinais insuficientes para classificação. Revise os blocos e marque os sinais observados durante a consulta.</span></div>`;
+    return;
+  }
+
+  // Coletar sinais marcados para o output
+  const sinaisParaOutput = [];
+  [...marcadosA, ...marcadosB, ...marcadosC].forEach(cb => {
+    const label = cb.parentElement.querySelector('.signal-text')?.textContent;
+    if (label) sinaisParaOutput.push({ dim: 'Pirâmide da Mudança', texto: label, bloco: 'Bloco ' + cb.dataset.block });
+  });
+  state.nivel = nivel;
+  state.sinaisMarcados = sinaisParaOutput;
+
+  // Avançar imediatamente — avisos serão exibidos no relatório final
+  renderQs(locusQs, 'locus-questions', 'locus');
+  setTimeout(() => {
+    mostrarSecao('sec-locus');
+    atualizarProgress(2);
+  }, 200);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CLASSIFICAÇÃO — LOCUS
+// ═══════════════════════════════════════════════════════════════
+function calcularLocus() {
+  const res = coletarPolos('locus', locusQs);
+  if (!res) return;
+  state.locus = res.classificacao;
+
+  // Adicionar sinais ao estado
+  res.sinais.forEach(s => state.sinaisMarcados.push({ dim: 'Locus', texto: s.texto, polo: s.polo }));
+
+  renderQs(aeQs, 'ae-questions', 'ae');
+  setTimeout(() => {
+    mostrarSecao('sec-ae');
+    atualizarProgress(3);
+  }, 200);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CLASSIFICAÇÃO — AUTOESTIMA
+// ═══════════════════════════════════════════════════════════════
+function calcularAE() {
+  const res = coletarPolos('ae', aeQs);
+  if (!res) return;
+  state.ae = res.classificacao;
+
+  res.sinais.forEach(s => state.sinaisMarcados.push({ dim: 'Autoestima', texto: s.texto, polo: s.polo }));
+
+  renderPerfil();
+  mostrarSecao('sec-perfil');
+  atualizarProgress(4);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// HELPER — COLETAR POLOS
+// ═══════════════════════════════════════════════════════════════
+function coletarPolos(prefix, qs) {
+  const selecoes = {};
+  let ok = true;
+  qs.forEach(q => {
+    const btn = document.querySelector(`.tri-option[data-q="${prefix}-${q.id}"][class*="selected"]`);
+    if (!btn) {
+      ok = false;
+    } else {
+      selecoes[q.id] = btn.dataset.polo;
+    }
+  });
+
+  if (!ok) {
+    alert('Por favor, selecione a síntese (Polo A, B ou C) para todas as perguntas.');
+    return null;
+  }
+
+  // Contar A, B, C excluindo N de D3
+  const vals = Object.values(selecoes).filter(v => v !== 'N');
+  const cA = vals.filter(v => v === 'A').length;
+  const cB = vals.filter(v => v === 'B').length;
+  const cC = vals.filter(v => v === 'C').length;
+
+  let classificacao;
+  if (cA > cC && cA >= cB) classificacao = 'Interno';
+  else if (cC > cA && cC >= cB) classificacao = prefix === 'ae' ? 'Comprometida' : 'Externo';
+  else classificacao = prefix === 'ae' ? 'Parcial' : 'Misto';
+
+  if (prefix === 'ae') {
+    if (cA > cB && cA > cC) classificacao = 'Preservada';
+    else if (cC > cA && cC > cB) classificacao = 'Comprometida';
+    else classificacao = 'Parcial';
+  }
+
+  // Sinais marcados
+  const sinais = [];
+  document.querySelectorAll(`input[data-q^="${prefix}-"]:checked`).forEach(cb => {
+    const label = cb.parentElement.querySelector('.signal-text')?.textContent;
+    const polo  = cb.dataset.polo;
+    if (label) sinais.push({ texto: label, polo });
+  });
+
+  return { classificacao, sinais };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER — PERFIL
+// ═══════════════════════════════════════════════════════════════
+function renderPerfil() {
+  const { nivel, locus, ae, sinaisMarcados, aviso } = state;
+
+  const nivelLabel = nivel === 1
+    ? 'Nível 1 — Sensível à persuasão confrontativa'
+    : nivel === 2
+    ? 'Nível 2 — Sensível à persuasão motivacional'
+    : 'Nível 3 — Resistente à persuasão verbal';
+
+  const locusLabel = locus === 'Interno'
+    ? 'Locus de controle interno'
+    : locus === 'Externo'
+    ? 'Locus de controle externo'
+    : 'Locus de controle misto';
+
+  const aeLabel = ae === 'Preservada'
+    ? 'Autoestima preservada'
+    : ae === 'Comprometida'
+    ? 'Autoestima comprometida'
+    : 'Autoestima parcialmente preservada';
+
+  // Agrupar sinais por dimensão
+  const porDim = {};
+  sinaisMarcados.forEach(s => {
+    const chave = s.dim || s.bloco || 'Outros';
+    if (!porDim[chave]) porDim[chave] = [];
+    porDim[chave].push(s.texto);
+  });
+
+  const sinaisHTML = Object.entries(porDim).map(([dim, itens]) => `
+    <div style="margin-bottom:.75rem">
+      <div style="font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--slate-400);margin-bottom:.35rem">${dim}</div>
+      ${itens.map(t => `<div class="signal-item">${t}</div>`).join('')}
+    </div>`).join('') || '<div style="color:var(--slate-400);font-size:.82rem">Nenhum sinal marcado.</div>';
+
+  const avisoHTML = aviso
+    ? `<div class="alert alert-info" style="margin-top:1.25rem"><span>${aviso}</span></div>`
+    : '';
+
+  document.getElementById('perfil-output').innerHTML = `
+    <div class="profile-card">
+      <div class="profile-label">Perfil comunicacional gerado</div>
+      <div class="profile-value">${nivelLabel}</div>
+      <div class="profile-dims">
+        <div class="dim-chip nivel">${nivelLabel}</div>
+        <div class="dim-chip locus">${locusLabel}</div>
+        <div class="dim-chip ae">${aeLabel}</div>
+      </div>
+      <div class="signals-summary">
+        <div class="signals-summary-title">Sinais que fundamentaram o diagnóstico</div>
+        ${sinaisHTML}
+      </div>
+      ${avisoHTML}
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DICIONÁRIO DE TÉCNICAS (baseado no Apêndice A — Carrió, 2012)
+// ═══════════════════════════════════════════════════════════════
+const tecnicas = {
+  'Conselho inoculado': {
+    pagina: '152–153',
+    definicao: 'Forma de conselho em que o paciente não percebe que o está recebendo. A mensagem é disfarçada como uma vontade do profissional, uma cena imaginada ou uma referência grupal, de modo a contornar as defesas conscientes e depositar uma ideia que germinará sem gerar resistência imediata.',
+    fundamento: 'A ideia é plantada em um lugar "não muito consciente" do paciente, mobilizando divergências com suas próprias crenças predominantes sem ativar os esquemas defensivos já ensaiados.',
+    exemplo: '"Tomara que um dia o senhor venha me dizer: parei de fumar!" / "Outro dia, um paciente chegou e disse \'parei de fumar\', e eu pensei: aqui está uma pessoa que decidiu viver melhor."',
+  },
+  'Conselho explícito': {
+    pagina: '152–153',
+    definicao: 'Forma de conselho em que a mensagem é direta e claramente afirmada pelo profissional. Pode ser de conteúdo argumentativo, identificativo ou emocional.',
+    fundamento: 'Comunicação unidirecional que ancora o paciente a uma realidade clínica objetiva. Eficaz quando o paciente ainda não estruturou resistências à mudança e possui percepção de autoeficácia.',
+    exemplo: '"Vou dizer claramente o que aconselho: o senhor deve parar de fumar. Se reduzir a pressão sanguínea, vai melhorar significativamente."',
+  },
+  'Identificação grupal': {
+    pagina: '152–153',
+    definicao: 'Submodalidade do conselho explícito que ancora a mensagem em uma referência coletiva — o que "quase todos" os pacientes fazem ou decidiram — em vez de apelar à decisão individual.',
+    fundamento: 'Pacientes com locus de controle externo orientam-se por referências sociais e coletivas. A âncora grupal oferece um modelo externo de comportamento que reduz a pressão sobre a agência individual.',
+    exemplo: '"Quase todos os meus pacientes nessa situação optaram por parar de fumar." / "A maioria das pessoas com esse quadro que seguiram esse caminho tiveram uma melhora considerável."',
+  },
+  'Persuasão confrontativa': {
+    pagina: '156–157',
+    definicao: 'Abordagem direta e argumentativa em que o profissional evidencia a situação clínica, propõe um plano e estabelece um diálogo orientado à mudança. O termo "confrontativo" não denota agressividade, mas clareza e diretividade.',
+    fundamento: 'O profissional apresenta a realidade clínica de forma clara, propõe um plano e abre espaço para diálogo. Adequada quando o paciente ainda não estruturou resistências à mudança.',
+    exemplo: '"O senhor tem pressão alta e precisa iniciar tratamento. Sabe o que isso significa para a sua saúde a longo prazo? Vamos conversar sobre o que podemos fazer juntos."',
+  },
+  'Persuasão motivacional': {
+    pagina: '155–156',
+    definicao: 'Abordagem bidirecional em que o profissional evita argumentar diretamente e busca que o próprio paciente identifique e verbalize as razões para mudar. Baseia-se nos cinco princípios da entrevista motivacional.',
+    fundamento: 'O profissional age como facilitador do processo argumentativo interno do paciente, procurando que ele "convença a si mesmo" ao identificar contradições entre seus valores e seus comportamentos atuais.',
+    exemplo: '"Nunca se propôs a parar de fumar?" / "Eu me pergunto por que o senhor é pessimista em relação ao cigarro, quando conseguiu deixar a bebida com sucesso."',
+  },
+  'Criar divergência': {
+    pagina: '154–155',
+    definicao: 'Princípio central da persuasão motivacional. Consiste em identificar uma crença do paciente que contradiz outra de suas próprias crenças e tornar essa contradição visível. Funciona como uma "manobra de judô" que surpreende o paciente com seus próprios argumentos.',
+    fundamento: '"Não existe pior inimigo para uma das nossas crenças que o resto das nossas próprias crenças em contradição com ela" (William James, citado por Carrió). A frase-chave: "Talvez ocorra exatamente o contrário do que o senhor supõe."',
+    exemplo: 'Paciente: "Sou escravo da insulina." Profissional: "O senhor não acha que é ser mais escravo vir ao pronto-socorro todo mês com uma descompensação? Talvez a insulina evite que seja escravo do diabetes."',
+  },
+  'Absorver a resistência': {
+    pagina: '155',
+    definicao: 'Quando o paciente apresenta argumentos defensivos, o profissional não os confronta diretamente. Em vez disso, acolhe a resistência parcialmente e redireciona para outro aspecto do hábito sobre o qual não existe defesa articulada.',
+    fundamento: 'Ao não confrontar a resistência, o profissional evita acionar os esquemas defensivos já ensaiados. O redirecionamento abre uma nova frente onde o paciente ainda não tem argumentos preparados.',
+    exemplo: 'Paciente: "Eu sei me controlar com a bebida." Profissional: "Sim, pode ser que, até certo ponto, o senhor consiga controlar. No entanto, levando em conta a inflamação que vemos, seu fígado parece dizer \'basta\'. O que acha que estão dizendo essas transaminases tão altas?"',
+  },
+  'Criar clima empático': {
+    pagina: '154',
+    definicao: 'Consiste em estabelecer um ambiente de consulta escrupulosamente respeitoso com a autonomia do paciente, deixando claro que a influência tem um limite e que não haverá sermão. O clima emocional é mais determinante do que os conteúdos verbais.',
+    fundamento: '"Um clima emocional de culpa levanta resistências que dificilmente podem ser superadas, não importando quais sejam as habilidades verbais aplicadas." O bom clima permite inclusive erros nas mensagens sem comprometer o vínculo.',
+    exemplo: '"Eu só vou influenciá-lo até onde o senhor permitir e, em todo caso, não espere um sermão. O que quero é entender melhor a sua situação."',
+  },
+  'Favorecer a autoeficácia': {
+    pagina: '155',
+    definicao: 'Técnica que consiste em transmitir ao paciente a mensagem de que ele é capaz de realizar a mudança, valorizando qualquer passo já dado — inclusive o ato de comparecer à consulta.',
+    fundamento: 'A percepção de autoeficácia é um dos pilares do locus de controle interno. Sem ela, mesmo a melhor orientação técnica não se traduz em ação. Pequenas vitórias narradas pelo profissional funcionam como evidência de capacidade.',
+    exemplo: '"Você pode fazer isso!" / "Tudo o que fez até agora já é muito." / "O simples fato de ter vindo ao consultório significa que estamos avançando."',
+  },
+  'Negociação por deslizamento': {
+    pagina: '174–175',
+    definicao: 'Forma de negociação em que não se busca um acordo explícito. Uma das partes demonstra uma expectativa e deixa à outra a resolução do conflito, sem nomeá-lo diretamente como negociação.',
+    fundamento: 'Por não nomear o conflito, evita acionar o orgulho ou as defesas do paciente. A resolução acontece de forma indireta, preservando a aliança terapêutica.',
+    exemplo: 'O profissional planta uma expectativa implícita: "Tomara que um dia o senhor me surpreenda." O paciente, sem pressão direta, reorganiza suas intenções em resposta à expectativa percebida.',
+  },
+  'Cedência intencional': {
+    pagina: '178–179',
+    definicao: 'Estratégia em que o profissional cede em um ponto de forma deliberada e calculada, com o objetivo de preservar a aliança terapêutica e manter o paciente no sistema de cuidado.',
+    fundamento: '"Uma vez que cedemos, fazer isso ganhando em aliança terapêutica é muito diferente de fazê-lo como se tivéssemos perdido a investida." A cedência intencional não é passividade — é uma escolha estratégica que prioriza o longo prazo.',
+    exemplo: '"Prefiro que me diga isso a agir contra a sua vontade. Afinal de contas, o paciente é o senhor. Mas gostaria de continuar conversando sobre isso nas próximas consultas."',
+  },
+  'Legitimar e normalizar a divergência': {
+    pagina: '174',
+    definicao: 'Técnica que consiste em validar explicitamente o direito do paciente de discordar (legitimar) e apresentar a discordância como algo comum e esperado (normalizar), antes de qualquer tentativa de persuasão.',
+    fundamento: 'Ao não tratar a discordância como um problema, o profissional desativa o mecanismo defensivo que a resistência ativa. O paciente que se sente legitimado tende a ser mais honesto sobre suas crenças reais.',
+    exemplo: 'Legitima: "Fez muito bem em me dizer isso. Tem todo o direito de não concordar comigo." Normaliza: "Muitas pessoas pensam exatamente isso quando ouvem essa orientação pela primeira vez."',
+  },
+  'Resposta avaliativa': {
+    pagina: '124',
+    definicao: 'Técnica de exploração das crenças e emoções do paciente diante de uma proposta clínica. Quando o paciente expressa dúvida ou discordância, em vez de reforçar os argumentos, o profissional para e investiga o que está por trás da reação.',
+    fundamento: 'A resposta justificativa — repetir ou intensificar os argumentos — é a reação natural, mas ineficaz. A resposta avaliativa exige disposição genuína de estar aberto ao que o paciente pensa. É a "porta imprescindível para persuadir e negociar".',
+    exemplo: 'Paciente: "Não sei, não acho que consigo seguir essa dieta." Profissional (resposta avaliativa): "Não acha muito viável, não é? O que especificamente parece mais difícil para o senhor?"',
+  },
+  'Modelagem de comportamento': {
+    pagina: '204',
+    definicao: 'Em vez de emitir uma ordem ou conselho verbal, o profissional demonstra fisicamente o comportamento desejado, ou articula que alguém no entorno do paciente o demonstre. A mudança é induzida por imitação de um modelo concreto.',
+    fundamento: 'Para pacientes resistentes à persuasão verbal, a palavra é ineficaz. A modelagem opera no plano comportamental direto: o paciente observa e imita, sem precisar ser persuadido verbalmente.',
+    exemplo: '"Vou mostrar para o senhor como se faz essa ginástica e a partir de agora deve fazê-la todas as manhãs." / Envolver um familiar para administrar a medicação ou servir como modelo de comportamento alimentar.',
+  },
+  'Sistemas de tutela e lembretes': {
+    pagina: '159',
+    definicao: 'Técnicas de motivação externas que operam por meio de estrutura ambiental: lembretes automatizados, tutores que administram medicação, rotinas estruturadas ou internações em programas de disciplina terapêutica.',
+    fundamento: 'Quando apenas com a palavra não se conseguem mudanças, são necessárias medidas externas à própria vontade do paciente para criar um "empurrão" que inicie um novo padrão de comportamento.',
+    exemplo: 'Lembretes de medicação no celular; familiar encarregado de observar a adesão; participação em programa de acompanhamento estruturado.',
+  },
+  'Reforço de autoestima': {
+    pagina: '161–162',
+    definicao: 'Conjunto de intervenções comunicacionais que visam restaurar ou fortalecer o referencial simbólico que situa o paciente no mundo e sustenta a energia psíquica necessária para empreender mudanças.',
+    fundamento: '"A autoestima é o referencial simbólico que nos situa no mundo e nos faz acreditar que somos importantes para alguém ou para alguma coisa. Sem autoestima, o entusiasmo necessário para a mudança não se sustenta." (Carrió, 2012, p. 161)',
+    exemplo: 'Nomear experiências passadas de superação; reconhecer esforços já empreendidos; evitar qualquer linguagem que possa soar como crítica ou julgamento; explorar vínculos e propósitos que o paciente já valoriza.',
+  },
+};
+
+// Helper: extrair nomes de técnicas de uma string de estratégia
+function extrairTecnicas(texto) {
+  return Object.keys(tecnicas).filter(nome =>
+    texto.toLowerCase().includes(nome.toLowerCase())
+  );
+}
+
+// Render de um card de técnica expansível
+function renderCardTecnica(nome) {
+  const t = tecnicas[nome];
+  if (!t) return '';
+  const id = 'tec-' + nome.replace(/[^a-z0-9]/gi, '-');
+  return `
+    <div class="tecnica-card" id="${id}">
+      <button class="tecnica-toggle" onclick="toggleTecnica('${id}')">
+        <span class="tecnica-nome">${nome}</span>
+        <span class="tecnica-ref">Carrió (2012), p. ${t.pagina}</span>
+        <span class="tecnica-chevron">▸</span>
+      </button>
+      <div class="tecnica-body">
+        <div class="tecnica-field">
+          <div class="tecnica-field-label">Definição</div>
+          <div class="tecnica-field-text">${t.definicao}</div>
+        </div>
+        <div class="tecnica-field">
+          <div class="tecnica-field-label">Fundamento / Observação clínica</div>
+          <div class="tecnica-field-text">${t.fundamento}</div>
+        </div>
+        <div class="tecnica-field">
+          <div class="tecnica-field-label">Exemplo de frase ou aplicação</div>
+          <div class="tecnica-field-text tecnica-exemplo">${t.exemplo}</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function toggleTecnica(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('aberto');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER — ESTRATÉGIAS (com referência teórica das técnicas)
+// ═══════════════════════════════════════════════════════════════
+function irParaEstrategias() {
+  const { nivel, locus, ae } = state;
+  const key = `N${nivel}·${locus}·${ae}`;
+  const est = estrategias[key];
+
+  const nivelExt = nivel === 1 ? 'Nível 1 — Persuasão confrontativa'
+    : nivel === 2 ? 'Nível 2 — Persuasão motivacional'
+    : 'Nível 3 — Resistente à persuasão verbal';
+  const locusExt = locus === 'Interno' ? 'Locus de controle interno'
+    : locus === 'Externo' ? 'Locus de controle externo'
+    : 'Locus de controle misto';
+  const aeExt = ae === 'Preservada' ? 'Autoestima preservada'
+    : ae === 'Comprometida' ? 'Autoestima comprometida'
+    : 'Autoestima parcialmente preservada';
+
+  let html = `
+    <div style="font-size:.8rem;color:var(--slate-400);margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:1px solid var(--slate-800)">
+      Perfil: <strong style="color:var(--slate-200)">${nivelExt}</strong> · <strong style="color:var(--slate-200)">${locusExt}</strong> · <strong style="color:var(--slate-200)">${aeExt}</strong>
+    </div>`;
+
+  if (!est) {
+    html += `<div class="alert alert-warning"><span>Perfil não mapeado. Consulte a matriz completa no documento de referência.</span></div>`;
+    document.getElementById('estrategias-output').innerHTML = html;
+    mostrarSecao('sec-estrategias');
+    atualizarProgress(5);
+    return;
+  }
+
+  // Alerta especial para AE-Comprometida em N2
+  if (nivel === 2 && ae === 'Comprometida') {
+    html += `<div class="alert alert-warning" style="margin-bottom:1.25rem"><span><strong>Atenção:</strong> Com autoestima comprometida em Nível 2, o reforço da autoestima é sempre pré-condição. Nenhuma técnica persuasiva deve ser iniciada antes dessa etapa.</span></div>`;
+  }
+
+  // Coletar todas as técnicas mencionadas nas estratégias
+  const tecnicasP1    = extrairTecnicas(est.p1);
+  const tecnicasP2    = extrairTecnicas(est.p2);
+  const tecnicasMod   = extrairTecnicas(est.mod);
+  // União sem duplicatas, preservando ordem P1 > P2 > Mod
+  const todasTecnicas = [...new Set([...tecnicasP1, ...tecnicasP2, ...tecnicasMod])];
+
+  html += `
+    <div class="strategy-section">
+      <div class="strategy-section-title">Estratégia prioritária</div>
+      <div class="strategy-item"><span class="priority-badge p1">Prioridade 1</span> ${est.p1}</div>
+    </div>
+    <div class="strategy-section">
+      <div class="strategy-section-title">Estratégia secundária</div>
+      <div class="strategy-item"><span class="priority-badge p2">Prioridade 2</span> ${est.p2}</div>
+    </div>
+    <div class="strategy-section">
+      <div class="strategy-section-title">Modulação e ajuste indicado pelo perfil</div>
+      <div class="strategy-item">${est.mod}</div>
+    </div>
+    <div class="strategy-section">
+      <div class="strategy-section-title">Abordagens a evitar</div>
+      <div class="strategy-item strategy-avoid">${est.evitar}</div>
+    </div>`;
+
+  // Bloco de referência teórica
+  if (todasTecnicas.length > 0) {
+    html += `
+      <div class="tecnicas-ref-bloco">
+        <div class="tecnicas-ref-titulo">
+          Referência teórica das técnicas indicadas
+          <span class="tecnicas-ref-sub">Baseado em Borrell Carrió (2012) — clique para expandir cada técnica</span>
+        </div>
+        ${todasTecnicas.map(renderCardTecnica).join('')}
+      </div>`;
+  }
+
+  document.getElementById('estrategias-output').innerHTML = html;
+  mostrarSecao('sec-estrategias');
+  atualizarProgress(5);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER — REFLEXÃO
+// ═══════════════════════════════════════════════════════════════
+function irParaReflexao() {
+  const { nivel, locus, ae } = state;
+  const chave = `${locus}·${ae}`;
+  const nivelKey = `N${nivel}`;
+
+  const especificas = reflexaoEspecifica[nivelKey]?.[chave]
+    || reflexaoEspecifica[nivelKey]?.default
+    || [];
+
+  let qNum = 1;
+  const renderGrupo = (titulo, qs) => `
+    <div class="reflection-group">
+      <div class="reflection-group-title">${titulo}</div>
+      ${qs.map(q => `
+        <div class="reflection-q">
+          <div class="q-num">${qNum++}</div>
+          <div>${q}</div>
+        </div>`).join('')}
+    </div>`;
+
+  const html =
+    renderGrupo('A — Diagnóstico relacional', reflexaoFixa.A) +
+    renderGrupo('B — Conduta comunicacional', reflexaoFixa.B) +
+    renderGrupo('C — Dimensão ética', reflexaoFixa.C) +
+    (especificas.length ? renderGrupo(`D — Específicas para N${nivel} · LC-${locus} · AE-${ae}`, especificas) : '');
+
+  document.getElementById('reflexao-output').innerHTML = html;
+  mostrarSecao('sec-reflexao');
+  atualizarProgress(6);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RESET
+// ═══════════════════════════════════════════════════════════════
+function resetar() {
+  state.nivel = null;
+  state.locus = null;
+  state.ae    = null;
+  state.aviso = '';
+  state.sinaisMarcados = [];
+
+  document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+  document.querySelectorAll('.tri-option').forEach(b => b.className = 'tri-option');
+  document.getElementById('nivel-result').style.display = 'none';
+  document.getElementById('locus-result').style.display = 'none';
+  document.getElementById('ae-result').style.display = 'none';
+
+  mostrarSecao('sec-piramide');
+  atualizarProgress(1);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
