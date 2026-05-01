@@ -1,0 +1,140 @@
+{
+  "id": "dim2",
+  "nome": "Locus de Controle",
+  "descricao": "A quem ou ao quê o paciente atribui agência sobre sua condição.",
+  "mini_glossario_inline": "A quem ou ao quê o paciente atribui agência sobre sua condição. Pode atribuir a si mesmo, à equipe de saúde, a fatores impessoais como sorte ou destino, ou a uma combinação. A atribuição modula como uma estratégia comunicacional ressoa com o paciente.",
+  "estrutura": "duas_etapas",
+  "polos": {
+    "Interno": {
+      "valor_canonico": "Interno",
+      "nomenclatura_completa": "Locus de Controle Interno",
+      "caracterizacao": "Atribui agência sobre desfechos às próprias ações e decisões."
+    },
+    "Misto": {
+      "valor_canonico": "Misto",
+      "nomenclatura_completa": "Locus de Controle Misto",
+      "caracterizacao": "Reconhece agência própria e influência de fatores externos em equilíbrio variável."
+    },
+    "Externo-Aliança": {
+      "valor_canonico": "Externo-Aliança",
+      "nomenclatura_completa": "Locus de Controle Externo dirigido à Aliança terapêutica",
+      "caracterizacao": "Atribui agência predominante ao profissional de saúde, à equipe ou ao tratamento médico."
+    },
+    "Externo-Fatalista": {
+      "valor_canonico": "Externo-Fatalista",
+      "nomenclatura_completa": "Locus de Controle Externo Fatalista",
+      "caracterizacao": "Atribui agência a fatores impessoais (sorte, destino, genética, forças sobrenaturais)."
+    },
+    "Externo-misto": {
+      "valor_canonico": "Externo-misto",
+      "nomenclatura_completa": "Locus de Controle Externo (em formação)",
+      "caracterizacao": "Predominância externa identificada, sem que o tipo (Aliança ou Fatalista) tenha ficado claro nesta consulta."
+    }
+  },
+  "etapa1": {
+    "nome": "Classificação preliminar (Interno / Misto / Externo)",
+    "perguntas": [
+      {
+        "id": "D1",
+        "pergunta_sintese": "Como o paciente explicou a origem da sua condição ou hábito?",
+        "polos": {
+          "A": { "rotulo": "Fatores internos — decisões e comportamentos próprios", "mapeia_para": "Interno" },
+          "B": { "rotulo": "Combinação de fatores pessoais e externos", "mapeia_para": "Misto" },
+          "C": { "rotulo": "Fatores externos, fora do seu controle", "mapeia_para": "Externo" }
+        },
+        "sinais": [
+          { "texto": "Atribuiu a condição a comportamentos próprios (\"Eu exagerei na alimentação\").", "polo": "A" },
+          { "texto": "Reconheceu que suas decisões contribuíram para a situação.", "polo": "A" },
+          { "texto": "Citou fatores externos mas reconheceu ter parte na situação.", "polo": "B" },
+          { "texto": "Atribuiu predominantemente a genética, sorte ou circunstâncias.", "polo": "C" },
+          { "texto": "Negou qualquer relação entre seus comportamentos e a condição.", "polo": "C" }
+        ]
+      },
+      {
+        "id": "D2",
+        "pergunta_sintese": "Ao falar em mudança, a quem o paciente atribuiu a possibilidade de sucesso?",
+        "polos": {
+          "A": { "rotulo": "A si mesmo — depende de sua decisão e esforço", "mapeia_para": "Interno" },
+          "B": { "rotulo": "A si mesmo, condicionado a apoio externo", "mapeia_para": "Misto" },
+          "C": { "rotulo": "A fatores fora do seu controle", "mapeia_para": "Externo" }
+        },
+        "sinais": [
+          { "texto": "Expressou que a mudança depende da sua própria decisão.", "polo": "A" },
+          { "texto": "Demonstrou senso de agência (\"Se eu quiser, consigo\").", "polo": "A" },
+          { "texto": "Condicionou a mudança a apoio familiar, social ou mudança de contexto.", "polo": "B" },
+          { "texto": "Atribuiu a possibilidade de mudança a fatores além do seu controle.", "polo": "C" },
+          { "texto": "Expressou sensação de impotência diante da mudança.", "polo": "C" }
+        ]
+      },
+      {
+        "id": "D3",
+        "pergunta_sintese": "Como o paciente interpretou tentativas anteriores de mudança?",
+        "polos": {
+          "A": { "rotulo": "Atribuiu o resultado à sua própria conduta", "mapeia_para": "Interno" },
+          "B": { "rotulo": "Combinação de esforço pessoal e circunstâncias", "mapeia_para": "Misto" },
+          "C": { "rotulo": "Fatores externos ou características imutáveis de si mesmo", "mapeia_para": "Externo" },
+          "N": { "rotulo": "Não relatou tentativas anteriores", "mapeia_para": "N/A" }
+        },
+        "sinais": [
+          { "texto": "Atribuiu sucesso anterior ao próprio esforço e disciplina.", "polo": "A" },
+          { "texto": "Atribuiu fracasso à falta de esforço ou decisão própria.", "polo": "A" },
+          { "texto": "Atribuiu resultado a uma combinação de esforço e circunstâncias.", "polo": "B" },
+          { "texto": "Atribuiu fracasso a fatores externos (\"minha família não ajudou\").", "polo": "C" },
+          { "texto": "Atribuiu fracasso a características imutáveis (\"não tenho força de vontade\").", "polo": "C" },
+          { "texto": "Não relatou tentativas anteriores (esta pergunta não entra no cômputo).", "polo": "N" }
+        ]
+      }
+    ],
+    "regras_classificacao": {
+      "maioria_A": "2 ou 3 respostas Polo A → CLASSIFICAÇÃO FINAL: Interno",
+      "maioria_B": "2 ou 3 respostas Polo B → CLASSIFICAÇÃO FINAL: Misto",
+      "maioria_C": "2 ou 3 respostas Polo C → CONTINUA para Etapa 2",
+      "empate_1A_1B_1C": "1A + 1B + 1C → Misto",
+      "empate_1A_1C_1N": "1A + 1C + 1N (N/A em D3) → Misto",
+      "empate_1B_1C_1N": "1B + 1C + 1N (N/A em D3) → CONTINUA para Etapa 2 (sinal de Externo presente)",
+      "empate_1A_1B_1N": "1A + 1B + 1N (N/A em D3) → Misto",
+      "rota_especial_dim_2_perguntas": "Se D3 = N/A com sinal Externo em D1 ou D2, a Etapa 2 (D4) dispara como pergunta de validação adicional."
+    }
+  },
+  "etapa2": {
+    "nome": "Desambiguação Aliança / Fatalista",
+    "condicional": true,
+    "dispara_quando": "Etapa 1 → Externo predominante (incluindo rota especial)",
+    "pergunta": {
+      "id": "D4",
+      "pergunta_sintese": "Quando o paciente atribuiu a possibilidade de mudança a fatores externos, a quem ou ao quê especificamente?",
+      "polos": {
+        "Alianca": {
+          "rotulo": "Ao profissional de saúde, à equipe ou ao tratamento médico",
+          "mapeia_para": "Externo-Aliança"
+        },
+        "Fatalista": {
+          "rotulo": "A fatores impessoais (sorte, destino, genética, forças sobrenaturais)",
+          "mapeia_para": "Externo-Fatalista"
+        },
+        "MistoExterno": {
+          "rotulo": "Predominância externa identificada, mas Aliança ou Fatalista ainda não ficou claro nesta consulta",
+          "mapeia_para": "Externo-misto"
+        }
+      },
+      "sinais_alianca": [
+        { "texto": "Demonstrou deferência explícita à orientação médica, em frases como \"o que o doutor mandar\" ou \"o que a senhora achar melhor\".", "polo": "Alianca" },
+        { "texto": "Atribuiu melhoras prévias ao acompanhamento médico ou ao tratamento, em frases como \"foi com o senhor que comecei a melhorar\" ou \"esse remédio que vocês passaram que me ajudou\".", "polo": "Alianca" },
+        { "texto": "Expressou dependência da relação terapêutica como recurso central, em frases como \"se a senhora não me acompanhar, eu não consigo\" ou \"eu preciso vir aqui sempre, senão não dá certo\".", "polo": "Alianca" },
+        { "texto": "Manifestou confiança específica no profissional como agente de mudança, em frases como \"eu confio em você, doutor\" ou \"se a doutora disse que vai funcionar, eu acredito\".", "polo": "Alianca" }
+      ],
+      "sinais_fatalista": [
+        { "texto": "Atribuiu desfecho a vontade divina ou força espiritual, em frases como \"se Deus quiser, vai dar certo\" ou \"está na mão de Deus\" (sem associar à própria ação ou à do profissional).", "polo": "Fatalista" },
+        { "texto": "Atribuiu condição ou hábito a herança familiar imutável, em frases como \"é da família, todo mundo aqui tem isso\" ou \"meu pai era assim, meu avô era assim\".", "polo": "Fatalista" },
+        { "texto": "Expressou crença em destino ou predeterminação, em frases como \"se for para acontecer, vai acontecer\" ou \"cada um tem o seu fim\".", "polo": "Fatalista" },
+        { "texto": "Atribuiu desfecho à sorte, ao azar ou a circunstâncias impessoais, em frases como \"é o meu azar\" ou \"foi o que me coube na vida\".", "polo": "Fatalista" },
+        { "texto": "Demonstrou resignação diante de fator externo impessoal, em frases como \"não adianta lutar contra\" ou \"é o que tem para hoje\".", "polo": "Fatalista" }
+      ]
+    },
+    "regras_classificacao": {
+      "alianca": "D4 = C-Aliança → Externo-Aliança",
+      "fatalista": "D4 = C-Fatalista → Externo-Fatalista",
+      "misto_externo": "D4 = C-misto → Externo-misto"
+    }
+  }
+}

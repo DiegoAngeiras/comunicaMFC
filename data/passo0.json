@@ -1,0 +1,76 @@
+{
+  "id": "passo0",
+  "nome": "Identificação do comportamento-alvo",
+  "descricao": "Estabelece o referente concreto sobre o qual as Dimensões 1 e 4 vão operar.",
+  "campos": {
+    "dominio": {
+      "obrigatorio": true,
+      "rotulo": "Domínio do objetivo terapêutico",
+      "opcoes": [
+        {
+          "id": "comportamento_saude",
+          "rotulo": "Mudança de comportamento de saúde",
+          "exemplos": "Cessação tabágica, redução do consumo de álcool, mudança alimentar, atividade física, gestão de peso."
+        },
+        {
+          "id": "adesao_terapeutico",
+          "rotulo": "Adesão a regime terapêutico",
+          "exemplos": "Adesão medicamentosa, monitoramento (glicemia, pressão arterial), condutas de autocuidado em condição crônica."
+        },
+        {
+          "id": "decisao_clinica",
+          "rotulo": "Decisão clínica",
+          "exemplos": "Aceitar ou recusar tratamento, escolher entre opções terapêuticas, adesão a procedimentos preventivos ou diagnósticos."
+        },
+        {
+          "id": "outro",
+          "rotulo": "Outro",
+          "exemplos": "Para casos atípicos não cobertos pelas três categorias anteriores."
+        }
+      ]
+    },
+    "comportamento": {
+      "obrigatorio": false,
+      "rotulo": "Comportamento descrito (opcional)",
+      "placeholder": "Ex.: parar de fumar nos próximos 30 dias; tomar losartana 50 mg duas vezes ao dia; reduzir consumo de açúcar refinado.",
+      "ajuda": "Quando preenchido, esta descrição aparece em quadro lateral nas perguntas da Autoeficácia e nas saídas finais. Quando não preenchido, o sistema opera em modo simplificado."
+    },
+    "concordancia": {
+      "obrigatorio": true,
+      "rotulo": "Como o paciente reagiu à proposta de trabalhar este objetivo?",
+      "ajuda": "Selecione conforme a reação observada na consulta.",
+      "opcoes": [
+        {
+          "id": "sim",
+          "rotulo": "Concordou",
+          "definicao": "Concordou explicitamente, com sinais de envolvimento."
+        },
+        {
+          "id": "parcial",
+          "rotulo": "Concordou parcialmente",
+          "definicao": "Concordou verbalmente, mas com hesitação, ressalva ou pouca convicção."
+        },
+        {
+          "id": "nao",
+          "rotulo": "Discordou",
+          "definicao": "Discordou explicitamente, ou demonstrou divergência clara sobre o objetivo."
+        },
+        {
+          "id": "nao_explorado",
+          "rotulo": "Não chegamos a falar sobre isso",
+          "definicao": "O objetivo foi mencionado pelo profissional, mas a reação do paciente não foi verificada na consulta."
+        }
+      ]
+    },
+    "alvos_secundarios": {
+      "obrigatorio": false,
+      "exibir_na_ui": false,
+      "rotulo": "Alvos secundários",
+      "ajuda": "REMOVIDO DA UI EM 3.D v2 — campo preservado no schema para retrocompatibilidade do state, mas não renderizado. Decisão baseada em feedback de uso real (médico de família reportou pouca utilidade na rotina e ausência de uso posterior na renderização)."
+    }
+  },
+  "regras_propagacao": {
+    "concordancia_sim_parcial_nao": "Etapas 1, 2, 3, 4 prosseguem normalmente.",
+    "concordancia_nao_explorado": "Etapas 1, 2, 3 prosseguem normalmente. Etapa 4 (Autoeficácia) é sinalizada como Indisponível. Lógica de Recomendação ativa a situação especial nº 1."
+  }
+}

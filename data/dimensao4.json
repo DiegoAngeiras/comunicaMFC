@@ -1,0 +1,101 @@
+{
+  "id": "dim4",
+  "nome": "Autoeficácia tarefa-específica",
+  "descricao": "Crença do paciente na sua capacidade de executar o objetivo terapêutico do Passo 0.",
+  "mini_glossario_inline": "Crença do paciente na sua capacidade de executar este objetivo concreto. Distingue-se da autoestima por ser específica à tarefa, não à pessoa em geral. Calibra a ambição que o plano pode ter.",
+  "estrutura": "tres_perguntas_trifurcadas_referenciadas_ao_alvo",
+  "regra_referenciacao_textual": "Toda pergunta-síntese desta dimensão referencia o domínio marcado no Campo 1 do Passo 0 (substituição de [DOMÍNIO]). Quando o Campo 2 (Comportamento) está preenchido, ele aparece em quadro lateral destacado próximo à pergunta, com rótulo \"Comportamento descrito pelo residente: [TEXTO LIVRE]\". A descrição livre nunca entra gramaticalmente no enunciado da pergunta.",
+  "polos": {
+    "Alta": {
+      "valor_canonico": "Alta",
+      "nomenclatura_completa": "Autoeficácia Alta",
+      "caracterizacao": "Crença sólida na capacidade de executar o objetivo terapêutico."
+    },
+    "Moderada": {
+      "valor_canonico": "Moderada",
+      "nomenclatura_completa": "Autoeficácia Moderada",
+      "caracterizacao": "Crença parcial ou condicional na capacidade de executar o objetivo terapêutico."
+    },
+    "Baixa": {
+      "valor_canonico": "Baixa",
+      "nomenclatura_completa": "Autoeficácia Baixa",
+      "caracterizacao": "Crença mínima ou ausente na capacidade de executar o objetivo terapêutico."
+    },
+    "Indisponível": {
+      "valor_canonico": "Indisponível",
+      "nomenclatura_completa": "Autoeficácia Indisponível",
+      "caracterizacao": "O objetivo terapêutico não foi explorado em consulta. Os dados necessários para classificação tarefa-específica não foram gerados.",
+      "quando_aplica": "Concordância do Passo 0 = Não explorado."
+    }
+  },
+  "perguntas": [
+    {
+      "id": "F1",
+      "fonte_bandura": "Fonte 1 — experiências de domínio",
+      "pergunta_sintese": "Considerando as tentativas anteriores que o paciente relatou — ou a ausência delas — como ele interpreta sua capacidade de realizar a [DOMÍNIO]?",
+      "polos": {
+        "A": { "rotulo": "Confiante — experiências anteriores ou aposta nova com base sólida na capacidade própria", "mapeia_para": "Alta" },
+        "B": { "rotulo": "Ambivalente — reconhece capacidade limitada ou apenas em condições específicas", "mapeia_para": "Moderada" },
+        "C": { "rotulo": "Cético — experiências anteriores ou expectativa atual reforçaram crença de incapacidade", "mapeia_para": "Baixa" }
+      },
+      "sinais": [
+        { "texto": "Relatou tentativa anterior bem-sucedida no mesmo objetivo terapêutico ou em objetivo similar, em frases como \"já consegui parar antes\" ou \"uma vez tomei certinho por seis meses\".", "polo": "A" },
+        { "texto": "Sem experiência prévia, mas demonstrou expectativa positiva clara, em frases como \"acho que vou conseguir, é só me organizar\" ou \"é a primeira vez que vou tentar, mas estou decidido\".", "polo": "A" },
+        { "texto": "Relatou tentativa anterior com sucesso parcial ou condicionado, em frases como \"consigo no começo, mas depois desando\" ou \"deu certo enquanto tinha alguém me ajudando\".", "polo": "B" },
+        { "texto": "Atribuiu sucesso anterior a circunstâncias específicas que duvida se vão se repetir, em frases como \"naquela época eu tinha mais tempo\" ou \"era diferente, eu estava em outra fase\".", "polo": "B" },
+        { "texto": "Sem experiência prévia, expressou expectativa cautelosa ou condicional, em frases como \"vou tentar, vamos ver\" ou \"se eu conseguir uma rotina, talvez funcione\".", "polo": "B" },
+        { "texto": "Relatou tentativas anteriores fracassadas e atribuiu o fracasso a uma incapacidade fundamental sua, em frases como \"já tentei tantas vezes e não consigo\" ou \"não tenho força de vontade para isso\".", "polo": "C" },
+        { "texto": "Sem experiência prévia, expressou expectativa de fracasso, em frases como \"sei que não vou conseguir\" ou \"para que tentar se já sei como vai acabar?\".", "polo": "C" },
+        { "texto": "Demonstrou resignação diante da tentativa proposta, em frases como \"vou tentar, mas vai dar no mesmo\" ou \"a gente sabe como é, doutor\".", "polo": "C" }
+      ]
+    },
+    {
+      "id": "F2",
+      "fonte_bandura": "Fonte 2 — experiência vicária",
+      "pergunta_sintese": "O paciente conhece pessoas próximas que conseguiram realizar a [DOMÍNIO]? Em caso afirmativo, ele demonstrou se enxergar como alguém capaz de fazer o mesmo?",
+      "polos": {
+        "A": { "rotulo": "Conhece pessoas próximas que conseguiram, e se reconhece capaz como elas", "mapeia_para": "Alta" },
+        "B": { "rotulo": "Conhece pessoas próximas que conseguiram, mas hesita em se ver fazendo o mesmo", "mapeia_para": "Moderada" },
+        "C": { "rotulo": "Os casos próximos que conhece foram de fracasso, ou os de sucesso parecem inalcançáveis para ele", "mapeia_para": "Baixa" },
+        "N": { "rotulo": "Não conhece pessoas próximas com experiência neste objetivo", "mapeia_para": "N/A" }
+      },
+      "sinais": [
+        { "texto": "Citou espontaneamente pessoas próximas que conseguiram realizar o objetivo terapêutico ou similar, em frases como \"meu vizinho parou de fumar, ele conseguiu\" ou \"minha irmã também tem diabetes e está controlando direitinho\".", "polo": "A" },
+        { "texto": "Demonstrou identificação clara com a pessoa citada, em frases como \"se ele conseguiu, eu também posso\" ou \"a gente é parecido, então acho que dá\".", "polo": "A" },
+        { "texto": "Citou pessoas próximas que conseguiram, mas com identificação parcial ou condicionada, em frases como \"até tem uns que conseguem, mas é gente mais nova\" ou \"meu irmão parou, mas ele tem mais força do que eu\".", "polo": "B" },
+        { "texto": "Reconheceu casos de sucesso e fracasso entre pares, sem padrão claro, em frases como \"uns conseguem, outros não, é cada caso\".", "polo": "B" },
+        { "texto": "Citou apenas casos de fracasso entre pessoas próximas, em frases como \"todo mundo que tentou aqui em casa não deu certo\" ou \"meu pai tentou e não conseguiu, minha mãe também não\".", "polo": "C" },
+        { "texto": "Demonstrou desidentificação com casos de sucesso conhecidos, em frases como \"é fácil para quem tem condição\" ou \"esse aí teve sorte, comigo é diferente\".", "polo": "C" }
+      ]
+    },
+    {
+      "id": "F3",
+      "fonte_bandura": "Síntese das fontes — produto líquido",
+      "pergunta_sintese": "Como o paciente leu a relação entre o esforço que a [DOMÍNIO] vai exigir dele e a capacidade que ele acredita ter para enfrentar esse esforço?",
+      "polos": {
+        "A": { "rotulo": "Calibração positiva — esforço percebido menor que a capacidade percebida; paciente sente que dá conta", "mapeia_para": "Alta" },
+        "B": { "rotulo": "Calibração ambígua — capacidade e dificuldade em equilíbrio frágil ou em condições específicas", "mapeia_para": "Moderada" },
+        "C": { "rotulo": "Calibração negativa — esforço percebido maior que a capacidade percebida; paciente sente que não dá conta", "mapeia_para": "Baixa" }
+      },
+      "sinais": [
+        { "texto": "Demonstrou que o objetivo terapêutico parece tarefa enfrentável dentro de seus recursos atuais, em frases como \"isso eu consigo\" ou \"é só uma questão de organização, eu dou conta\".", "polo": "A" },
+        { "texto": "Minimizou a dificuldade percebida diante de sua capacidade, em frases como \"não é tão difícil assim\" ou \"já passei por coisa pior\".", "polo": "A" },
+        { "texto": "Relatou recursos concretos disponíveis para o objetivo terapêutico, em frases como \"tenho tempo de manhã, dá para fazer\" ou \"meu marido vai me ajudar com a comida\".", "polo": "A" },
+        { "texto": "Reconheceu capacidade e dificuldade em equilíbrio frágil, em frases como \"acho que dá, mas não vai ser fácil\" ou \"depende de como vou estar no dia\".", "polo": "B" },
+        { "texto": "Condicionou a viabilidade do objetivo terapêutico a fatores específicos, em frases como \"se eu conseguir manter a rotina, dá certo\" ou \"se nada acontecer, eu consigo\".", "polo": "B" },
+        { "texto": "Alternou avaliação positiva e negativa sobre a tarefa ao longo da consulta, sem síntese clara.", "polo": "B" },
+        { "texto": "Demonstrou que o objetivo terapêutico parece tarefa fora de seus recursos atuais, em frases como \"isso é demais para mim\" ou \"não dou conta de tanta coisa\".", "polo": "C" },
+        { "texto": "Amplificou a dificuldade percebida diante de sua capacidade, em frases como \"é muito difícil, doutor\" ou \"você está pedindo demais de mim\".", "polo": "C" },
+        { "texto": "Relatou ausência de recursos para o objetivo terapêutico, em frases como \"não tenho tempo, não tenho dinheiro, não tenho como\" ou \"tudo no meu dia já é demais, e ainda isso?\".", "polo": "C" }
+      ]
+    }
+  ],
+  "regras_classificacao": {
+    "maioria_A": "2 ou 3 respostas Polo A → AUTOEFICÁCIA ALTA",
+    "maioria_C": "2 ou 3 respostas Polo C → AUTOEFICÁCIA BAIXA",
+    "maioria_B_ou_empate_A_C": "Maioria Polo B ou empate A-C → AUTOEFICÁCIA MODERADA",
+    "F2_NA": "Quando F2 = N/A, cômputo realizado com 2 perguntas (F1 + F3). Empate F1-F3 → AUTOEFICÁCIA MODERADA.",
+    "alvo_nao_explorado": "Quando concordância do Passo 0 = Não explorado, Dimensão 4 sinalizada como Indisponível (perguntas F1, F2, F3 não são apresentadas)."
+  },
+  "diferenciacao_dim3": "Os sinais do Polo C de F3 (\"não dou conta de isso\") podem parecer próximos da Dimensão 3 (\"nunca consigo nada\"). A diferença é fundamental: a Dimensão 3 captura incapacidade global (paciente como pessoa); F3 captura calibração específica ao objetivo terapêutico (paciente em relação à tarefa concreta do Passo 0)."
+}

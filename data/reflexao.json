@@ -1,0 +1,127 @@
+{
+  "id": "reflexao",
+  "nome": "Módulo de Reflexão para Preceptoria",
+  "descricao": "Componente diferencial pedagógico do CLIPP. Função: transcender a técnica e promover reflexão crítica sobre o raciocínio clínico-relacional e sobre a dimensão ética da comunicação.",
+  "estrutura": "tres_camadas_fixas + camada_variavel_por_regras + perguntas_dirigidas_por_excecoes",
+
+  "camadas_fixas": [
+    {
+      "id": "A",
+      "nome": "Diagnóstico relacional",
+      "descricao": "Perguntas que examinam a qualidade da inferência feita pelo residente — os sinais que ele leu na consulta para produzir a classificação.",
+      "perguntas": [
+        "Quais sinais concretos durante a consulta indicaram o nível de receptividade do paciente? Você poderia ter confundido concordância superficial com abertura real?",
+        "Em algum momento o paciente deu uma abertura que você não aproveitou — uma hesitação, uma contradição, um \"mas...\"? O que poderia ter sido feito ali?"
+      ]
+    },
+    {
+      "id": "B",
+      "nome": "Conduta comunicacional",
+      "descricao": "Perguntas que examinam a aplicação técnica e a adaptação ao paciente concreto.",
+      "perguntas": [
+        "O conselho ou a abordagem escolhida foi adaptada à linguagem e à realidade existencial desse paciente específico, ou foi uma orientação genérica?",
+        "Quando o paciente apresentou resistência, você a absorveu ou a confrontou? O que aconteceu com o clima emocional da consulta a cada tentativa?",
+        "Você verificou a compreensão do paciente ao final? De que forma — e se não verificou, o que isso pode significar para a adesão?"
+      ]
+    },
+    {
+      "id": "C",
+      "nome": "Dimensão ética da influência",
+      "descricao": "Perguntas que examinam a dimensão ética da comunicação clínica, em fidelidade à insistência de Carrió de que toda persuasão clínica tem fundamento ético explícito.",
+      "perguntas": [
+        "A orientação foi feita para o bem-estar do paciente ou havia algum componente de conforto próprio — a sensação de \"cumprir o papel de dar o conselho\"?",
+        "Em algum momento a consulta saiu do território da persuasão virtuosa e entrou no da manipulação? Carrió define manipulação como usar \"meias verdades\" ou ocultar incertezas (p. 153).",
+        "O esforço de persuasão foi feito para o paciente ou sobre o paciente? Como você distingue esses dois modos na prática clínica?"
+      ]
+    }
+  ],
+
+  "camada_variavel": {
+    "titulo": "Específicas deste caso",
+    "descricao": "Perguntas reflexivas direcionadas ao perfil classificado. A Sec 11.3 do canônico v1.3 fornece quatro regras com texto verbatim e admite que a redação completa desta camada é deliberadamente parcial — a v1.3 cobre os perfis classicamente problemáticos. Perfis estáveis sem situação especial podem não casar nenhuma regra; nesse caso, a camada variável é silenciada (decisão D1 do handler na Fase 3.D — omissão deliberada, não bug).",
+
+    "ordem_de_especificidade": [
+      "1: combinacao_multidimensional",
+      "2: suborientacao_dimensao",
+      "3: precondicao_estrutural",
+      "4: categoria_ampla"
+    ],
+    "limite_perguntas": 3,
+    "comentario_limite": "Limite de 3 perguntas por unidade de contagem (perguntas individuais, não regras inteiras), conforme decisão D2 do handler. Excedentes são silenciados sem nota meta. Decisão D2 também especifica a ordem de especificidade: pré-condição estrutural (Autoestima Comprometida) fica ABAIXO da sub-orientação (Locus Externo-Aliança) porque a pré-condição já tem reforço próprio via situação especial nº 2.",
+
+    "regras": [
+      {
+        "id": "regra_N2_Interno_Preservada",
+        "especificidade": "combinacao_multidimensional",
+        "ordem_especificidade": 1,
+        "rotulo_interno": "Nível 2 + Locus Interno + Autoestima Preservada",
+        "condicao": { "dim1": "N2", "dim2": "Interno", "dim3": "Preservada" },
+        "perguntas": [
+          "Esse paciente tem motivação interna disponível. Você conseguiu evocar os valores e projetos de vida dele como motor da mudança, ou ficou no plano técnico-clínico?",
+          "A autonomia desse paciente exige que ele \"convença a si mesmo\". Em que momento da consulta você se colocou como facilitador desse processo — e não como o autor do argumento?"
+        ],
+        "origem_canonica": "Sec 11.3 — bloco 'Para Paciente sensível à persuasão verbal motivacional (Nível 2) · Locus Interno · Autoestima Preservada' (verbatim)"
+      },
+      {
+        "id": "regra_locus_Externo-Aliança",
+        "especificidade": "suborientacao_dimensao",
+        "ordem_especificidade": 2,
+        "rotulo_interno": "Locus Externo-Aliança em qualquer nível",
+        "condicao": { "dim2": "Externo-Aliança" },
+        "perguntas": [
+          "Esse paciente atribui a possibilidade de melhora à sua atuação. Isso é favorável à adesão de curto prazo, mas pode criar dependência. Em consultas futuras, há possibilidade de fortalecer a percepção de agência própria do paciente sem perder a aliança que funciona? Quais sinais você buscaria?"
+        ],
+        "origem_canonica": "Sec 11.3 — bloco 'Para Locus Externo-Aliança (em qualquer nível)' (verbatim)"
+      },
+      {
+        "id": "regra_autoestima_Comprometida",
+        "especificidade": "precondicao_estrutural",
+        "ordem_especificidade": 3,
+        "rotulo_interno": "Qualquer perfil com Autoestima Comprometida",
+        "condicao": { "dim3": "Comprometida" },
+        "perguntas": [
+          "Você identificou que esse paciente não tinha energia disponível para considerar a mudança? Sem autoestima mínima, a mudança não tem combustível. O que você fez para restaurar essa condição antes de persuadir?",
+          "Reveja suas palavras durante a consulta. Alguma delas, mesmo bem-intencionada, pode ter soado como crítica ou confirmação da incapacidade que o paciente já sente?"
+        ],
+        "origem_canonica": "Sec 11.3 — bloco 'Para qualquer perfil com Autoestima Comprometida (adiamento da estratégia recomendado)' (verbatim)"
+      },
+      {
+        "id": "regra_N3",
+        "especificidade": "categoria_ampla",
+        "ordem_especificidade": 4,
+        "rotulo_interno": "Nível 3 confirmado em qualquer perfil",
+        "condicao": { "dim1": "N3" },
+        "perguntas": [
+          "Como você distinguiu resistência estabelecida de pré-contemplação ainda em formação? Você tem histórico suficiente desse paciente para essa classificação?",
+          "Manter o vínculo com um paciente resistente sem forçar mudança é em si uma postura ética e terapêutica. Você conseguiu sair da consulta sem que o paciente se sentisse julgado, fracassado ou descartado?",
+          "Se você fosse esse paciente — com essa história, esse locus de controle e esse nível de autoestima —, o que você precisaria ouvir, ou não ouvir, para considerar voltar nessa consulta?"
+        ],
+        "origem_canonica": "Sec 11.3 — bloco 'Para qualquer paciente classificado como Paciente resistente à persuasão verbal (Nível 3)' (verbatim)"
+      }
+    ]
+  },
+
+  "perguntas_por_excecao": {
+    "comentario": "Sec 11.4 do canônico — perguntas dirigidas pelas situações especiais. Aparecem além das camadas fixas e da camada variável, em bloco próprio.",
+    "regras": [
+      {
+        "situacao_especial": 1,
+        "rotulo": "Alvo não explorado em consulta",
+        "pergunta": "O objetivo terapêutico não foi explorado nesta consulta. Em que momento isso poderia ter sido feito? O que impediu? Como será a abertura da próxima consulta para corrigir esta omissão?",
+        "origem_canonica": "Sec 11.4 — bloco 'Situação especial nº 1' (verbatim)"
+      },
+      {
+        "situacao_especial": 3,
+        "rotulo": "Concordância \"Não\" do paciente",
+        "pergunta": "O paciente não concordava com o objetivo terapêutico proposto. Antes da próxima consulta, vale uma reflexão: o objetivo terapêutico é sustentável dado o desacordo, ou ele precisa ser reformulado? Qual o fundamento ético de insistir em um objetivo terapêutico que o paciente não compartilha?",
+        "origem_canonica": "Sec 11.4 — bloco 'Situação especial nº 3' (verbatim)"
+      },
+      {
+        "situacao_especial": 4,
+        "rotulo": "Classificação em formação",
+        "pergunta": "A classificação atual deste paciente está em formação. Que sinais específicos você buscaria nas próximas consultas para definir melhor a classificação? Qual sua hipótese provisória sobre o tipo de Locus que este paciente apresenta?",
+        "origem_canonica": "Sec 11.4 — bloco 'Situação especial nº 4'. Verbatim do canônico v1.3 com reformulação aprovada na Fase 3.D v3: 'estabilizar' → 'definir melhor' e 'sub-orientação do Locus' → 'tipo de Locus' (entra como ajuste em v1.4 do canônico)."
+      }
+    ]
+  }
+}

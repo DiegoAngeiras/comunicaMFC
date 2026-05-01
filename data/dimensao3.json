@@ -1,0 +1,85 @@
+{
+  "id": "dim3",
+  "nome": "Autoestima",
+  "descricao": "Energia mobilizável do paciente para qualquer mudança — a \"bateria da vontade\".",
+  "mini_glossario_inline": "A \"bateria da vontade\" do paciente — a energia psicológica disponível para mobilizar qualquer esforço de mudança. Funciona como pré-condição estrutural: sem reservas de autoestima mínimas, estratégias de influência tendem a reativar sentimento de incapacidade em vez de mobilizar a mudanças.",
+  "estrutura": "tres_perguntas_trifurcadas",
+  "polos": {
+    "Preservada": {
+      "valor_canonico": "Preservada",
+      "nomenclatura_completa": "Autoestima Preservada",
+      "caracterizacao": "Energia psicológica mobilizada para considerar e sustentar mudança."
+    },
+    "Parcial": {
+      "valor_canonico": "Parcial",
+      "nomenclatura_completa": "Autoestima Parcial",
+      "caracterizacao": "Energia disponível, mas em estado frágil que exige cuidado de execução."
+    },
+    "Comprometida": {
+      "valor_canonico": "Comprometida",
+      "nomenclatura_completa": "Autoestima Comprometida",
+      "caracterizacao": "Energia mínima ausente; estratégia comunicacional sobre o objetivo terapêutico não tem suporte interno para se sustentar."
+    }
+  },
+  "perguntas": [
+    {
+      "id": "E1",
+      "pergunta_sintese": "Qual foi o tom narrativo predominante do paciente ao falar de si mesmo?",
+      "polos": {
+        "A": { "rotulo": "Autoconfiante — narrativa de agência pessoal", "mapeia_para": "Preservada" },
+        "B": { "rotulo": "Ambíguo — sem consistência clara entre esperança e resignação", "mapeia_para": "Parcial" },
+        "C": { "rotulo": "Resignado, autodepreciativo ou indiferente", "mapeia_para": "Comprometida" }
+      },
+      "sinais": [
+        { "texto": "Narrativa de superação pessoal (\"Já passei por coisa pior\").", "polo": "A" },
+        { "texto": "Expressou senso de capacidade ou autoconfiança em relação à mudança.", "polo": "A" },
+        { "texto": "Demonstrou curiosidade ou abertura para novas possibilidades.", "polo": "A" },
+        { "texto": "Narrativa ambígua: ora esperançosa, ora resignada, sem consistência.", "polo": "B" },
+        { "texto": "Aceitou orientações sem convicção (\"Vou tentar, mas não sei\").", "polo": "B" },
+        { "texto": "Expressões de incapacidade generalizada (\"Nunca consigo nada\").", "polo": "C" },
+        { "texto": "Tom resignado ou indiferente em relação à própria saúde.", "polo": "C" }
+      ]
+    },
+    {
+      "id": "E2",
+      "pergunta_sintese": "O paciente demonstrou senso de propósito, vínculo afetivo ou valor pessoal mobilizável?",
+      "polos": {
+        "A": { "rotulo": "Sim, de forma clara e espontânea", "mapeia_para": "Preservada" },
+        "B": { "rotulo": "Sim, mas frágil ou apenas quando estimulado", "mapeia_para": "Parcial" },
+        "C": { "rotulo": "Não demonstrou — ou o tema foi evitado", "mapeia_para": "Comprometida" }
+      },
+      "sinais": [
+        { "texto": "Citou espontaneamente razões pessoais para cuidar da saúde (família, projeto de vida).", "polo": "A" },
+        { "texto": "Demonstrou que algo ou alguém é importante o suficiente para motivar mudança.", "polo": "A" },
+        { "texto": "Expressou propósito apenas quando diretamente estimulado.", "polo": "B" },
+        { "texto": "O vínculo ou propósito citado pareceu frágil ou pouco consistente.", "polo": "B" },
+        { "texto": "Não demonstrou senso de propósito identificável.", "polo": "C" },
+        { "texto": "Evitou ou desviou quando o tema de motivação pessoal foi abordado.", "polo": "C" }
+      ]
+    },
+    {
+      "id": "E3",
+      "pergunta_sintese": "Como o paciente reagiu diante da possibilidade concreta de mudança?",
+      "polos": {
+        "A": { "rotulo": "Com abertura e algum entusiasmo ou curiosidade", "mapeia_para": "Preservada" },
+        "B": { "rotulo": "Com ambivalência: reconhece mas sem convicção", "mapeia_para": "Parcial" },
+        "C": { "rotulo": "Com resignação, ceticismo ou esquiva", "mapeia_para": "Comprometida" }
+      },
+      "sinais": [
+        { "texto": "Demonstrou abertura ou curiosidade diante da proposta de mudança.", "polo": "A" },
+        { "texto": "Fez perguntas sobre como implementar a mudança (foco no \"como\", não no \"se\").", "polo": "A" },
+        { "texto": "Reconheceu a possibilidade mas sem convicção clara.", "polo": "B" },
+        { "texto": "Disse que vai tentar, mas o tom indicou pouca crença no próprio esforço.", "polo": "B" },
+        { "texto": "Reagiu com ceticismo explícito (\"Já tentei, não adianta\").", "polo": "C" },
+        { "texto": "Demonstrou resignação ou esquiva diante da proposta.", "polo": "C" }
+      ]
+    }
+  ],
+  "regras_classificacao": {
+    "maioria_A": "2 ou 3 respostas Polo A → AUTOESTIMA PRESERVADA",
+    "maioria_C": "2 ou 3 respostas Polo C → AUTOESTIMA COMPROMETIDA",
+    "maioria_B": "2 ou 3 respostas Polo B → AUTOESTIMA PARCIAL",
+    "empate_A_C": "1A + 1C + 1B (sem maioria) → AUTOESTIMA PARCIAL",
+    "configuracao_1A_1B_1C": "1A + 1B + 1C → AUTOESTIMA PARCIAL"
+  }
+}

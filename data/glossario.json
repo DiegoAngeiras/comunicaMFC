@@ -1,0 +1,159 @@
+{
+  "id": "glossario",
+  "nome": "Glossário das técnicas comunicacionais",
+  "descricao": "Definição das técnicas utilizadas pela Lógica de Recomendação Comunicacional, organizadas por modalidade de influência (Carrió, Tabela 4.8) acrescidas de técnicas auxiliares.",
+  "modalidades": {
+    "conselho": {
+      "nome": "Conselho",
+      "tecnicas": [
+        {
+          "id": "conselho_explicito",
+          "nome": "Conselho explícito",
+          "definicao": "Mensagem unidirecional do profissional ao paciente, com intenção declarada de influenciar e sem estabelecimento de diálogo bidirecional. A mensagem é clara e situada na fase da entrevista de modo que não ofereça dúvida quanto à intenção.",
+          "variantes": [
+            "Argumentativa: \"se diminuir a pressão sanguínea, vai melhorar\".",
+            "Identificativa: \"fazer tal coisa costuma fazer muito bem a todas as pessoas\".",
+            "Emocional: \"se não fizer isso, sempre ficará na dúvida por não ter tentado\"."
+          ],
+          "indicacao": "Pacientes do Nível 1 da Pirâmide.",
+          "referencia": "Carrió, 2012, p. 152."
+        },
+        {
+          "id": "conselho_inoculado",
+          "nome": "Conselho inoculado",
+          "definicao": "Mensagem em que o paciente não percebe que recebe um conselho — fica disfarçada como uma vontade do profissional (\"tomara que um dia o senhor venha dizer para mim: parei de fumar!\"), uma cena imaginada ou uma mensagem de identificação grupal.",
+          "indicacao": "Pacientes resistentes (Nível 3) ou para inserções estratégicas em outros níveis quando a abordagem direta seria contraproducente.",
+          "referencia": "Carrió, 2012, p. 152."
+        },
+        {
+          "id": "identificacao_grupal",
+          "nome": "Identificação grupal",
+          "definicao": "Variante específica de mensagem que ancora a recomendação na referência a um grupo de pares (\"muitas pessoas na sua situação optaram por X\").",
+          "indicacao": "Particularmente eficaz em pacientes com Locus Externo, para quem referências coletivas substituem o apelo à autonomia individual.",
+          "referencia": "Carrió, 2012, p. 152–155."
+        }
+      ]
+    },
+    "persuasao": {
+      "nome": "Persuasão",
+      "tecnicas": [
+        {
+          "id": "persuasao_confrontativa",
+          "nome": "Persuasão confrontativa (ou diretiva)",
+          "definicao": "Modalidade de persuasão em que o profissional torna explícito o objetivo de convencer o paciente a assumir um comportamento que ele rotula de \"bom\", \"útil\" ou \"conveniente\". Estabelece diálogo (diferentemente do conselho), mas com direção clara.",
+          "indicacao": "Estilo direto e honesto, eficaz com pacientes do Nível 1.",
+          "referencia": "Carrió, 2012, p. 153."
+        },
+        {
+          "id": "persuasao_motivacional",
+          "nome": "Persuasão motivacional",
+          "definicao": "Modalidade derivada da Entrevista Motivacional (Miller & Rollnick), na qual o profissional não impõe argumentos mas evoca a motivação intrínseca do paciente — utiliza diálogo bidirecional para que o paciente próprio enuncie suas razões para mudar.",
+          "indicacao": "Pacientes ambivalentes (Nível 2).",
+          "referencia": "Carrió, 2012, p. 153–157; Miller & Rollnick, 2012."
+        },
+        {
+          "id": "criacao_divergencia",
+          "nome": "Criação de divergência",
+          "definicao": "Técnica da Entrevista Motivacional na qual o profissional facilita que o paciente perceba a discrepância entre seu comportamento atual e seus valores ou objetivos declarados.",
+          "indicacao": "Requer ambivalência preexistente para funcionar — não tem efeito em pacientes que negam a relevância do problema.",
+          "referencia": "Miller & Rollnick, 2012."
+        },
+        {
+          "id": "absorcao_resistencia",
+          "nome": "Absorção de resistência",
+          "definicao": "Técnica da Entrevista Motivacional na qual, diante de resistência verbal do paciente, o profissional não confronta nem refuta — recebe a resistência, valida-a e reformula a interação.",
+          "indicacao": "Exige treinamento e leitura fina dos sinais do paciente.",
+          "referencia": "Miller & Rollnick, 2012."
+        }
+      ]
+    },
+    "negociacao": {
+      "nome": "Negociação",
+      "tecnicas": [
+        {
+          "id": "negociacao_deslizamento",
+          "nome": "Negociação por deslizamento",
+          "definicao": "Modalidade de negociação na qual o desacordo não é confrontado diretamente; o profissional reconhece a posição do paciente e propõe uma alternativa que reduza a divergência sem exigir cedência explícita.",
+          "indicacao": "Pacientes resistentes (Nível 3) que preservariam menos posição se confrontados.",
+          "referencia": "Carrió, 2012, p. 165."
+        },
+        {
+          "id": "cedencia_intencional",
+          "nome": "Cedência intencional",
+          "definicao": "Cessão estratégica do profissional em um ponto da consulta para preservar a aliança terapêutica e manter abertura para encontros futuros. Não é abandono do objetivo terapêutico — é reconhecimento de que o vínculo é mais valioso, neste momento, do que o avanço sobre o ponto específico.",
+          "referencia": "Carrió, 2012, p. 170."
+        }
+      ]
+    },
+    "pedido": {
+      "nome": "Pedido",
+      "tecnicas": [
+        {
+          "id": "pedido_direto",
+          "nome": "Pedido direto",
+          "definicao": "Modalidade de influência em que o profissional formula uma solicitação concreta ao paciente, com resposta imediata aceitar ou recusar. Distingue-se do conselho explícito por solicitar resposta verbal explícita do paciente.",
+          "indicacao": "Eficaz quando o paciente já está mobilizado e a aceitação é provável; em pacientes ambivalentes ou resistentes, pode produzir respostas afirmativas pouco fiáveis (\"persuasões aparentes\").",
+          "referencia": "Carrió, 2012, Tabela 4.8."
+        },
+        {
+          "id": "pedido_janela_aberta",
+          "nome": "Pedido com janela aberta",
+          "definicao": "Variante na qual o profissional formula o pedido oferecendo possibilidade de recusa explícita sem perda relacional (\"fique à vontade para me dizer se preferir não, vamos encontrar outra forma\").",
+          "indicacao": "Pacientes com ambivalência percebida ou em situações em que a aceitação superficial poderia mascarar discordância real. Reduz o risco de \"persuasão aparente\" ao legitimar a recusa como resposta válida.",
+          "referencia": "Carrió, 2012, p. 154."
+        }
+      ]
+    },
+    "modelagem": {
+      "nome": "Modelagem",
+      "tecnicas": [
+        {
+          "id": "modelagem_comportamento",
+          "nome": "Modelagem de comportamento",
+          "definicao": "Conjunto de medidas externas à vontade do paciente que produzem mudança comportamental sem recurso à persuasão verbal — tutoria de administração de medicação, lembretes, sistemas de tutela ambiental, modelos imitativos no entorno.",
+          "indicacao": "Pacientes do Nível 3 e para o subgrupo conservador-externo do Nível 1.",
+          "referencia": "Carrió, 2012, p. 152."
+        },
+        {
+          "id": "sistemas_tutela",
+          "nome": "Sistemas de tutela e lembretes estruturados",
+          "definicao": "Variante operacional da modelagem que utiliza ferramentas externas regulares (alarmes, organizadores de medicação, supervisão familiar nomeada, lembretes via aplicativo). Estrutura ambiente para reduzir dependência da decisão verbal repetida do paciente.",
+          "referencia": "Carrió, 2012, p. 159."
+        }
+      ]
+    },
+    "auxiliares": {
+      "nome": "Técnicas auxiliares de modulação",
+      "tecnicas": [
+        {
+          "id": "reforco_autoeficacia",
+          "nome": "Reforço de autoeficácia",
+          "definicao": "Técnica que nomeia explicitamente experiências de sucesso do paciente (no domínio do objetivo terapêutico ou em outros domínios) com o objetivo de elevar a crença na própria capacidade de executar o comportamento-alvo. Fundamenta-se nas fontes 1 (experiências de domínio) e 3 (persuasão verbal) de Bandura.",
+          "indicacao": "Quando a Dimensão 4 do CLIPP indica autoeficácia Moderada ou Baixa.",
+          "referencia": "Bandura, 1997."
+        },
+        {
+          "id": "restauracao_autoestima",
+          "nome": "Restauração de autoestima",
+          "definicao": "Conjunto de operações comunicacionais cuja finalidade é restabelecer a \"bateria da vontade\" do paciente antes de qualquer estratégia comunicacional sobre o objetivo terapêutico. Inclui validação da dignidade do paciente, reconhecimento de esforços anteriores não-bem-sucedidos como esforços legítimos, e identificação de elementos preservados de identidade e propósito.",
+          "indicacao": "Quando a Dimensão 3 do CLIPP indica autoestima Comprometida.",
+          "referencia": "Carrió, 2012, p. 161."
+        },
+        {
+          "id": "manutencao_vinculo",
+          "nome": "Manutenção do vínculo terapêutico",
+          "definicao": "Estratégia de longo prazo na qual o objetivo da consulta atual não é a mudança comportamental, mas a preservação da relação médico-paciente como recurso terapêutico em si.",
+          "indicacao": "Objetivo realista de curto prazo em pacientes do Nível 3 com autoestima comprometida — situação em que tentativas de mudança comportamental imediata têm alta probabilidade de produzir ruptura do vínculo.",
+          "referencia": "Carrió, 2012, p. 168–171."
+        },
+        {
+          "id": "plano_escalonado",
+          "nome": "Plano escalonado em micro-objetivos",
+          "definicao": "Estruturação do plano terapêutico em etapas progressivas e realistas, com reforço a cada etapa cumprida, em vez de proposta única ambiciosa.",
+          "indicacao": "Quando a Dimensão 4 do CLIPP indica autoeficácia Moderada ou Baixa. \"Pequenas vitórias\" recalibram a fonte 1 (experiências de domínio) progressivamente.",
+          "referencia": "Bandura, 1997; Lorig et al., 2003."
+        }
+      ]
+    }
+  }
+}

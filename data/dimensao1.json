@@ -1,0 +1,174 @@
+{
+  "id": "dim1",
+  "nome": "Pirâmide da Mudança",
+  "descricao": "Nível de receptividade do paciente em relação ao objetivo terapêutico.",
+  "mini_glossario_inline": "Mede o quanto o paciente está receptivo a uma orientação direta sobre o objetivo terapêutico. Distingue desde abertura clara à orientação (que aceita conselho) até resistência consolidada (que requer estratégia indireta).",
+  "estrutura": "hierarquica_em_blocos",
+  "niveis": {
+    "N1": {
+      "valor_canonico": "Nível 1",
+      "nomenclatura_completa": "Paciente aberto à persuasão verbal confrontativa",
+      "caracterizacao": "Abertos, sem maiores resistências, a um conselho para melhorar sua saúde, principalmente se os hábitos que devem mudar não têm um componente importante de dependência psicofísica.",
+      "referencia": "Carrió, 2012, p. 152, 155"
+    },
+    "N2": {
+      "valor_canonico": "Nível 2",
+      "nomenclatura_completa": "Paciente sensível à persuasão verbal motivacional",
+      "caracterizacao": "Pré-contemplativos sem grandes defesas — aceitam um conselho e tentam segui-lo, mas resistem à mudança comportamental por ambivalência.",
+      "referencia": "Carrió, 2012, p. 158"
+    },
+    "N3": {
+      "valor_canonico": "Nível 3",
+      "nomenclatura_completa": "Paciente resistente à persuasão verbal",
+      "caracterizacao": "Não importa o que façamos, apenas com a palavra não conseguiremos mudanças nesse segmento.",
+      "referencia": "Carrió, 2012, p. 152"
+    }
+  },
+  "blocos": [
+    {
+      "id": "A",
+      "nome": "Triagem de resistência",
+      "objetivo": "Indica Paciente resistente à persuasão verbal (Nível 3).",
+      "ordem": 1,
+      "perguntas": [
+        {
+          "id": "A1",
+          "pergunta": "Há sinais de que o paciente recusou discutir o tema?",
+          "rotulo_curto": "Recusa explícita de discussão",
+          "sinais": [
+            "Expressou recusa verbal direta (\"Não quero falar sobre isso agora\").",
+            "Desviou o tema ativamente a cada tentativa de abordagem."
+          ],
+          "ancora_carrio": "\"o paciente segura a porta fechada com força\" (p. 159)"
+        },
+        {
+          "id": "A2",
+          "pergunta": "O paciente apresentou argumentos que pareceram pré-elaborados?",
+          "rotulo_curto": "Esquemas defensivos ensaiados",
+          "sinais": [
+            "Utilizou frases pré-fabricadas (\"Já me disseram isso mil vezes\").",
+            "Respondeu de forma automática, sem elaborar."
+          ],
+          "ancora_carrio": "\"resistências já testadas em diálogos com amigos e familiares\" (p. 154)"
+        },
+        {
+          "id": "A3",
+          "pergunta": "Há registro de tentativas anteriores frustradas?",
+          "rotulo_curto": "Histórico de tentativas sem efeito duradouro",
+          "sinais": [
+            "Prontuário ou histórico registra abordagens anteriores sem adesão.",
+            "O próprio paciente relata ter sido \"aconselhado muito\" sem efeito."
+          ],
+          "ancora_carrio": "\"é o fracasso contínuo que nos fará qualificar um paciente como resistente\" (p. 158)"
+        },
+        {
+          "id": "A4",
+          "pergunta": "A intervenção verbal produziu efeito oposto ao desejado?",
+          "rotulo_curto": "Resistência crescente à intervenção verbal",
+          "sinais": [
+            "A resistência aumentou visivelmente quando o tema foi aprofundado.",
+            "O paciente encerrou ou tentou encerrar o diálogo ao ser questionado."
+          ],
+          "ancora_carrio": "ciclo de \"mais da mesma coisa\" (p. 154)"
+        }
+      ],
+      "regra": {
+        "confirmacao": "A3 confirmado E (A1 OU A2 OU A4 confirmado) → Nível 3 confirmado.",
+        "suspeita": "A1, A2 ou A4 confirmado isoladamente sem A3 → suspeita de Nível 3; prosseguir para Bloco B; sinalizar ambiguidade ao residente."
+      }
+    },
+    {
+      "id": "B",
+      "nome": "Triagem de ambivalência",
+      "objetivo": "Indica Paciente sensível à persuasão verbal motivacional (Nível 2).",
+      "ordem": 2,
+      "perguntas": [
+        {
+          "id": "B1",
+          "pergunta": "O paciente reconheceu, ainda que parcialmente, que o hábito ou comportamento pode ser prejudicial?",
+          "rotulo_curto": "Reconhecimento parcial do problema",
+          "sinais": [
+            "Admitiu que \"talvez\" o hábito não faça bem.",
+            "Demonstrou consciência do risco, mas minimizou."
+          ],
+          "ancora_carrio": "Tabela 4.10, \"Pensa que isso pode prejudicá-lo?\" (p. 158)"
+        },
+        {
+          "id": "B2",
+          "pergunta": "O paciente reconheceu o problema mas apresentou justificativas para não mudar?",
+          "rotulo_curto": "Ambivalência expressa",
+          "sinais": [
+            "Usou \"mas...\" após reconhecer o problema (\"Sei que devo parar, mas...\").",
+            "Concordou verbalmente mas demonstrou dúvida no tom ou na postura."
+          ],
+          "ancora_carrio": "persuasões aparentes — paciente diz \"sim\" mas age diferente (p. 154)"
+        },
+        {
+          "id": "B3",
+          "pergunta": "O paciente demonstrou algum nível de preocupação com o futuro quando explorada a motivação?",
+          "rotulo_curto": "Preocupação com consequências futuras",
+          "sinais": [
+            "Citou consequências futuras espontaneamente ou quando estimulado."
+          ],
+          "ancora_carrio": "Tabela 4.10, \"Até que ponto está preocupado em continuar...?\" (p. 158)"
+        },
+        {
+          "id": "B4",
+          "pergunta": "O paciente já tentou mudar antes, mesmo sem sucesso duradouro?",
+          "rotulo_curto": "Tentativas anteriores reconhecidas",
+          "sinais": [
+            "Relatou tentativas anteriores de mudança, ainda que frustradas."
+          ],
+          "ancora_carrio": "Tabela 4.10, \"Outras vezes tentou ou pelo menos pensou em mudar?\" (p. 158)"
+        }
+      ],
+      "regra": {
+        "confirmacao": "Duas ou mais respostas afirmativas, sem critério do Bloco A confirmado → Nível 2."
+      }
+    },
+    {
+      "id": "C",
+      "nome": "Confirmação de abertura",
+      "objetivo": "Indica Paciente aberto à persuasão verbal confrontativa (Nível 1).",
+      "ordem": 3,
+      "perguntas": [
+        {
+          "id": "C1",
+          "pergunta": "O paciente acolheu a orientação sem resistência significativa?",
+          "rotulo_curto": "Acolhimento da orientação",
+          "sinais": [
+            "Recebeu o conselho sem contestação ou esquiva."
+          ],
+          "ancora_carrio": "\"abertos, sem maiores resistências\" (p. 155)"
+        },
+        {
+          "id": "C2",
+          "pergunta": "O paciente fez perguntas sobre como implementar a mudança (foco no \"como\", não no \"se\")?",
+          "rotulo_curto": "Foco no \"como\"",
+          "sinais": [
+            "Perguntou sobre etapas práticas, doses, frequência ou recursos."
+          ],
+          "ancora_carrio": "receptivos ao conselho explícito (p. 155)"
+        },
+        {
+          "id": "C3",
+          "pergunta": "O paciente demonstrou crença em sua capacidade de mudar se decidisse?",
+          "rotulo_curto": "Percepção de autoeficácia",
+          "sinais": [
+            "Expressou confiança na própria capacidade (\"Se eu decidir, consigo\")."
+          ],
+          "ancora_carrio": "\"percepção de eficácia, a sensação de ter e dispor de nossa vida\" (p. 151)"
+        }
+      ],
+      "regra": {
+        "confirmacao": "Duas ou mais respostas afirmativas, com Blocos A e B negativos → Nível 1."
+      }
+    }
+  ],
+  "tratamento_inconclusao": {
+    "criterio": "Nenhum dos três blocos atinge seu critério de confirmação.",
+    "classificacao_provisoria": "N2",
+    "marcacao": "provisorio_inconclusao",
+    "justificativa": "Interpretação de máxima cautela: ambivalência é o estado mais comum em APS. Sinaliza para revisão na próxima consulta."
+  }
+}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ComunicaMFC — Sistema de Classificação</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-eyebrow">Preceptoria em MFC</div>
+    <h1>Comunica<span>MFC</span></h1>
+    <p class="header-sub">
+      Sistema de classificação do perfil comunicacional do paciente,
+      derivado do Modelo de Influência Interpessoal de Borrell Carrió (2012).
+    </p>
+  </header>
+
+  <!-- PROGRESS BAR — 6 passos -->
+  <div class="progress-bar" id="progressBar">
+    <div class="progress-step active" id="pstep-1">
+      <div class="step-dot">1</div>
+      <span class="step-label">Comportamento-alvo</span>
+    </div>
+    <div class="progress-line" id="pline-12" style="--fill:0%"></div>
+    <div class="progress-step" id="pstep-2">
+      <div class="step-dot">2</div>
+      <span class="step-label">Pirâmide</span>
+    </div>
+    <div class="progress-line" id="pline-23" style="--fill:0%"></div>
+    <div class="progress-step" id="pstep-3">
+      <div class="step-dot">3</div>
+      <span class="step-label">Locus</span>
+    </div>
+    <div class="progress-line" id="pline-34" style="--fill:0%"></div>
+    <div class="progress-step" id="pstep-4">
+      <div class="step-dot">4</div>
+      <span class="step-label">Autoestima</span>
+    </div>
+    <div class="progress-line" id="pline-45" style="--fill:0%"></div>
+    <div class="progress-step" id="pstep-5">
+      <div class="step-dot">5</div>
+      <span class="step-label">Autoeficácia</span>
+    </div>
+    <div class="progress-line" id="pline-56" style="--fill:0%"></div>
+    <div class="progress-step" id="pstep-6">
+      <div class="step-dot">6</div>
+      <span class="step-label">Resultado</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       PASSO 0 — Comportamento-alvo
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="section visible" id="sec-passo0">
+    <div id="passo0-content">
+      <!-- populado por Render.renderizarPasso0() -->
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       DIMENSÃO 1 — Pirâmide da Mudança
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="section" id="sec-piramide">
+    <div id="piramide-content">
+      <!-- populado por Render.renderizarDimensao1() -->
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       DIMENSÃO 2 — Locus de Controle
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="section" id="sec-locus">
+    <div id="locus-content">
+      <!-- populado por Render.renderizarDimensao2() -->
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       DIMENSÃO 3 — Autoestima
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="section" id="sec-autoestima">
+    <div id="autoestima-content">
+      <!-- populado por Render.renderizarDimensao3() -->
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       DIMENSÃO 4 — Autoeficácia tarefa-específica
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="section" id="sec-autoeficacia">
+    <div id="autoeficacia-content">
+      <!-- populado por Render.renderizarDimensao4() -->
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       RESULTADO — placeholder Fase 3.B
+       (substituído pela apresentação completa na Fase 3.D)
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="section" id="sec-resultado">
+    <div id="resultado-content">
+      <!-- populado por Render.renderizarResultadoPlaceholder() -->
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<!-- BARRA DE REINÍCIO -->
+<div class="reset-bar">
+  <button class="btn btn-ghost"
+          onclick="App.reiniciar()"
+          style="font-size:.8rem;padding:.5rem 1.2rem">
+    ↻ Reiniciar classificação
+  </button>
+</div>
+
+<!-- Scripts — ordem importa: state e classify antes de render e app. -->
+<script src="lib/state.js"></script>
+<script src="lib/classify.js"></script>
+<script src="lib/render.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,465 @@
+{
+  "id": "fragmentos",
+  "nome": "Dicionário de fragmentos textuais para a Lógica de Recomendação Comunicacional",
+  "status": "POPULADO_3C2 — Extração canônica completa, com decisões do handler aplicadas em L5 (template dinâmico) e L6 (composição tripla do bloco 'A evitar').",
+
+  "convencoes": {
+    "placeholder_dominio_lower": "[DOMINIO_MIDFRASE] — domínio em minúsculas, para uso mid-frase em português ('...sobre adesão a regime terapêutico').",
+    "placeholder_dominio_artigo": "[DOMINIO_COM_ARTIGO] — 'a [domínio]' (artigo definido + rótulo lowercase).",
+    "placeholder_estrategia_base": "[ESTRATEGIA_BASE_NOME] — nome da estratégia-base do Nível classificado (ex.: 'persuasão motivacional', 'conselho explícito ou persuasão confrontativa', 'modelagem de comportamento combinada com manutenção do vínculo').",
+    "placeholder_locus_descritivo": "[LOCUS_DESCRITIVO] — descrição clínica adjetiva do polo do Locus, em vez do rótulo técnico. Ver tabela _LOCUS_DESCRITIVO_TABELA abaixo. Adicionado em 3.D v2 substituindo os antigos [NIVEL_NOMEADO] + [LOCUS_NOMEADO], que produziam jargão interno do CLIPP na saída ao residente.",
+    "tecnicas_mencionadas": "Array de IDs do glossario.json. Vazio quando o fragmento não nomeia técnica."
+  },
+
+  "_LOCUS_DESCRITIVO_TABELA": {
+    "Interno": "ancorada em valores e projetos do próprio paciente",
+    "Misto": "com âncoras tanto na agência do paciente quanto em sua rede de apoio",
+    "Externo-Aliança": "ancorada na relação médico-paciente como motor explícito da mudança",
+    "Externo-Fatalista": "ancorada em referências grupais e estruturação ambiental",
+    "Externo-misto": "começando pela aliança terapêutica e ajustando conforme os sinais predominantes do paciente vão se mostrando"
+  },
+
+  "fragmentos": [
+
+    "===== CATEGORIA: REPERTORIO_BASE — Sec 9.2 + Ex. 9.8.1 =====",
+
+    {
+      "id": "repertorio_base_N1",
+      "categoria": "repertorio_base",
+      "aplicavel_quando": { "dim1": "N1" },
+      "texto": "Para este perfil, o repertório indicado é o conselho explícito ou a persuasão confrontativa,",
+      "estrategia_base_nome": "conselho explícito ou persuasão confrontativa",
+      "tecnicas_mencionadas": ["conselho_explicito", "persuasao_confrontativa"],
+      "origem_canonica": "Sec 9.2 (estratégia-base) + Ex. 9.8.1 (formulação textual)",
+      "status": "extracao_direta_do_canonico"
+    },
+    {
+      "id": "repertorio_base_N2",
+      "categoria": "repertorio_base",
+      "aplicavel_quando": { "dim1": "N2" },
+      "texto": "Para este perfil, o repertório indicado é a persuasão motivacional,",
+      "estrategia_base_nome": "persuasão motivacional",
+      "tecnicas_mencionadas": ["persuasao_motivacional"],
+      "origem_canonica": "Sec 9.2 + analogia ao Ex. 9.8.1 (L1 aprovada pelo handler)",
+      "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
+    },
+    {
+      "id": "repertorio_base_N3",
+      "categoria": "repertorio_base",
+      "aplicavel_quando": { "dim1": "N3" },
+      "texto": "Para este perfil, o repertório indicado é a modelagem de comportamento combinada com manutenção do vínculo,",
+      "estrategia_base_nome": "modelagem de comportamento combinada com manutenção do vínculo",
+      "tecnicas_mencionadas": ["modelagem_comportamento", "manutencao_vinculo"],
+      "origem_canonica": "Sec 9.2 + analogia ao Ex. 9.8.1 (L1 aprovada pelo handler)",
+      "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
+    },
+
+    "===== CATEGORIA: MODULACAO_LOCUS — Sec 9.4 + Ex. 9.8.1 =====",
+
+    {
+      "id": "modulacao_locus_Interno",
+      "categoria": "modulacao_locus",
+      "aplicavel_quando": { "dim2": "Interno" },
+      "texto": "com âncoras nos valores e projetos de vida do próprio paciente.",
+      "locus_nomeado_curto": "Interno",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Sec 9.4 (linha Interno) + Ex. 9.8.1 (formulação textual verbatim)",
+      "status": "extracao_direta_do_canonico"
+    },
+    {
+      "id": "modulacao_locus_Misto",
+      "categoria": "modulacao_locus",
+      "aplicavel_quando": { "dim2": "Misto" },
+      "texto": "com âncoras tanto nos recursos internos do paciente quanto em sua rede de apoio.",
+      "locus_nomeado_curto": "Misto",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Sec 9.4 (linha Misto) + analogia ao Interno (L2 aprovada)",
+      "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
+    },
+    {
+      "id": "modulacao_locus_Externo-Aliança",
+      "categoria": "modulacao_locus",
+      "aplicavel_quando": { "dim2": "Externo-Aliança" },
+      "texto": "com âncoras na relação médico-paciente como motor explícito da mudança.",
+      "locus_nomeado_curto": "Aliança",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Sec 9.4 (linha Externo-Aliança) + analogia ao Interno (L2 aprovada)",
+      "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
+    },
+    {
+      "id": "modulacao_locus_Externo-Fatalista",
+      "categoria": "modulacao_locus",
+      "aplicavel_quando": { "dim2": "Externo-Fatalista" },
+      "texto": "com âncoras em referências grupais e em estruturação ambiental concreta, evitando verbalização densa.",
+      "locus_nomeado_curto": "Fatalista",
+      "tecnicas_mencionadas": ["identificacao_grupal", "modelagem_comportamento"],
+      "origem_canonica": "Sec 9.4 (linha Externo-Fatalista, colunas Âncoras + Linguagem) + L2 aprovada",
+      "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
+    },
+    {
+      "id": "modulacao_locus_Externo-misto",
+      "categoria": "modulacao_locus",
+      "aplicavel_quando": { "dim2": "Externo-misto" },
+      "texto": "começando pela ancoragem na aliança terapêutica, com ajuste conforme os sinais predominantes do paciente vão se mostrando ao longo das consultas.",
+      "locus_nomeado_curto": "em formação",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Sec 9.4 (linha Externo-misto) + L2 aprovada",
+      "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
+    },
+
+    "===== CATEGORIA: CALIBRACAO_AUTOEFICACIA — Sec 9.5 + Ex. 9.8.1 =====",
+
+    {
+      "id": "calibracao_autoeficacia_Alta",
+      "categoria": "calibracao_autoeficacia",
+      "aplicavel_quando": { "dim4": "Alta" },
+      "texto": "Quando a autoeficácia está alta, é viável propor plano em escala única — decisão e resultado em uma etapa, com reforço explícito da capacidade já demonstrada para evitar regressão.",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Sec 9.5 (linha Alta) + L3 aprovada",
+      "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
+    },
+    {
+      "id": "calibracao_autoeficacia_Moderada",
+      "categoria": "calibracao_autoeficacia",
+      "aplicavel_quando": { "dim4": "Moderada" },
+      "texto": "Quando a autoeficácia está moderada, recomenda-se estruturar o plano em etapas progressivas com reforços a cada consulta, em vez de proposta única ambiciosa.",
+      "tecnicas_mencionadas": ["plano_escalonado"],
+      "origem_canonica": "Ex. 9.8.1 (verbatim) + Sec 9.5 (linha Moderada)",
+      "status": "extracao_direta_do_canonico"
+    },
+    {
+      "id": "calibracao_autoeficacia_Baixa",
+      "categoria": "calibracao_autoeficacia",
+      "aplicavel_quando": { "dim4": "Baixa" },
+      "texto": "Quando a autoeficácia está baixa, é prioritário propor um micro-objetivo identificável como pequena vitória, com calibração da dificuldade percebida antes de propor o plano.",
+      "tecnicas_mencionadas": ["plano_escalonado", "reforco_autoeficacia"],
+      "origem_canonica": "Sec 9.5 (linha Baixa) + L3 aprovada",
+      "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
+    },
+
+    "===== CATEGORIA: PRECONDICAO_AUTOESTIMA — Sec 9.3 + Ex. 9.8.2 =====",
+
+    {
+      "id": "precondicao_autoestima_Preservada",
+      "categoria": "precondicao",
+      "aplicavel_quando": { "dim3": "Preservada" },
+      "texto": null,
+      "ativa_bloco_2": false,
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Sec 9.3 (Execução normal — sem bloco)",
+      "status": "fragmento_silencioso_por_design",
+      "comentario": "Autoestima Preservada não gera Bloco 2."
+    },
+    {
+      "id": "precondicao_autoestima_Parcial",
+      "categoria": "precondicao",
+      "aplicavel_quando": { "dim3": "Parcial" },
+      "ativa_bloco_2": true,
+      "titulo_bloco": "Cuidados de execução",
+      "texto": "A autoestima do paciente está parcialmente preservada — energia disponível, mas em estado frágil. A estratégia segue como planejada, com quatro cuidados: nomear, antes de qualquer plano, experiências passadas de sucesso do paciente; usar linguagem livre de avaliação negativa de tentativas anteriores; validar explicitamente o esforço já feito; manter ritmo mais lento, com pausas para o paciente assimilar.",
+      "tecnicas_mencionadas": ["restauracao_autoestima"],
+      "origem_canonica": "Sec 9.3 (Autoestima Parcial, 4 cuidados em bullets) + L4 aprovada",
+      "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
+    },
+    {
+      "id": "precondicao_autoestima_Comprometida_fora_N3",
+      "categoria": "precondicao",
+      "aplicavel_quando": { "dim3": "Comprometida", "dim1_negado": "N3" },
+      "ativa_bloco_2": true,
+      "titulo_bloco": "Recomendação inicial",
+      "texto": "A autoestima do paciente está comprometida. Estratégias persuasivas, mesmo bem-intencionadas, podem ser percebidas como confirmação de incapacidade. Recomenda-se priorizar hoje a restauração da autoestima e adiar a estratégia sobre [DOMINIO_MIDFRASE] para a próxima consulta.",
+      "tecnicas_mencionadas": ["restauracao_autoestima"],
+      "origem_canonica": "Sec 9.3 (verbatim) + Ex. 9.8.2 (verbatim renderizado)",
+      "status": "extracao_direta_do_canonico"
+    },
+    {
+      "id": "precondicao_autoestima_Comprometida_em_N3",
+      "categoria": "precondicao",
+      "aplicavel_quando": { "dim3": "Comprometida", "dim1": "N3" },
+      "ativa_bloco_2": true,
+      "titulo_bloco": "Recomendação inicial",
+      "texto": "A autoestima do paciente está comprometida e o nível classificado é o de resistência confirmada. A estratégia-base já é a manutenção do vínculo — a restauração da autoestima passa a ser o único objetivo realista de curto prazo. Não há próxima fase a desbloquear: restauração e manutenção do vínculo se integram na consulta atual.",
+      "tecnicas_mencionadas": ["restauracao_autoestima", "manutencao_vinculo"],
+      "origem_canonica": "Sec 9.3 (exceção do N3 explicitada) + L4 aprovada",
+      "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
+    },
+
+    "===== CATEGORIA: ESTRATEGIA_SUBSTITUTIVA — quando precondicao adia =====",
+
+    {
+      "id": "estrategia_restauracao_autoestima",
+      "categoria": "estrategia_substitutiva",
+      "aplicavel_quando": { "situacao_especial": 2 },
+      "titulo_bloco": "Estratégia prioritária",
+      "texto": "Identificar e nomear, na consulta de hoje, ao menos uma experiência passada de sucesso do paciente em qualquer domínio — não precisa ser saúde. Validar explicitamente a dignidade e os esforços já empreendidos por ele.",
+      "tecnicas_mencionadas": ["restauracao_autoestima"],
+      "origem_canonica": "Ex. 9.8.2 (verbatim do bloco Estratégia prioritária com adiamento)",
+      "status": "extracao_direta_do_canonico"
+    },
+
+    "===== CATEGORIA: PROXIMA_CONSULTA — bloco condicional (L5: template) =====",
+
+    {
+      "id": "proxima_consulta_apos_adiamento",
+      "categoria": "proxima_consulta",
+      "aplicavel_quando": { "situacao_especial": 2 },
+      "titulo_bloco": "Próxima consulta",
+      "texto": "Após restauração mínima da autoestima, executar [ESTRATEGIA_BASE_NOME], [LOCUS_DESCRITIVO], propondo um micro-objetivo prioritário em vez do plano completo.",
+      "tecnicas_mencionadas": ["plano_escalonado"],
+      "origem_canonica": "Ex. 9.8.2 (verbatim) — generalizado como template; reformulado em 3.D v2 conforme feedback de uso real (substituição dos rótulos técnicos 'Nível N' e 'modulação X' por descritivos clínicos do Locus, eliminando jargão interno do CLIPP da saída ao residente)",
+      "status": "template_com_substituicao_dinamica_clinica"
+    },
+
+    "===== CATEGORIA: A_EVITAR — composição tripla (L6 aprovada) =====",
+    "===== Subcategoria 1: vetação por Nível (vem da Sec 9.2 col. Repertório vetado) =====",
+
+    {
+      "id": "evitar_vetacao_N1",
+      "categoria": "evitar_vetacao_nivel",
+      "aplicavel_quando": { "dim1": "N1" },
+      "texto": "linguagem motivacional, desnecessária neste perfil",
+      "tecnicas_mencionadas": ["persuasao_motivacional"],
+      "origem_canonica": "Ex. 9.8.1 (frase 1 do bloco 'A evitar', verbatim)",
+      "status": "extracao_direta_do_canonico"
+    },
+    {
+      "id": "evitar_vetacao_N2",
+      "categoria": "evitar_vetacao_nivel",
+      "aplicavel_quando": { "dim1": "N2" },
+      "texto": "conselho explícito direto, que ativa resistência neste perfil",
+      "tecnicas_mencionadas": ["conselho_explicito"],
+      "origem_canonica": "Sec 9.2 (linha N2, coluna Repertório vetado) — formulação por analogia ao Ex. 9.8.1",
+      "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
+    },
+    {
+      "id": "evitar_vetacao_N3",
+      "categoria": "evitar_vetacao_nivel",
+      "aplicavel_quando": { "dim1": "N3" },
+      "texto": "qualquer forma de persuasão, que tende a aprofundar a resistência neste perfil",
+      "tecnicas_mencionadas": ["persuasao_confrontativa", "persuasao_motivacional"],
+      "origem_canonica": "Sec 9.2 (linha N3, coluna Repertório vetado) — formulação por analogia ao Ex. 9.8.1",
+      "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
+    },
+
+    "===== Subcategoria 2: contra-modulação de Locus (espelho negativo da modulação 9.4) =====",
+
+    {
+      "id": "evitar_contramod_locus_Interno",
+      "categoria": "evitar_contramod_locus",
+      "aplicavel_quando": { "dim2": "Interno" },
+      "texto": "apelos a referências grupais, que não ressoam quando o paciente atribui agência principalmente a si mesmo",
+      "tecnicas_mencionadas": ["identificacao_grupal"],
+      "origem_canonica": "Ex. 9.8.1 (frase 2 do bloco 'A evitar', verbatim)",
+      "status": "extracao_direta_do_canonico"
+    },
+    {
+      "id": "evitar_contramod_locus_Misto",
+      "categoria": "evitar_contramod_locus",
+      "aplicavel_quando": { "dim2": "Misto" },
+      "texto": "linguagem que pendere unilateralmente para a autonomia ou para a dependência — os sinais que o paciente apresentou são variados, e impor um único lado pode descaracterizar o que ele está sentindo",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Sec 9.4 (linha Misto, coluna Risco específico) — espelho negativo da modulação correspondente, conforme L6 aprovada",
+      "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
+    },
+    {
+      "id": "evitar_contramod_locus_Externo-Aliança",
+      "categoria": "evitar_contramod_locus",
+      "aplicavel_quando": { "dim2": "Externo-Aliança" },
+      "texto": "estímulo à autonomia desacompanhada da figura terapêutica, que pode soar como abandono e ativar o risco de paciente passivo crônico",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Sec 9.4 (linha Externo-Aliança, coluna Risco específico) — L6 aprovada",
+      "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
+    },
+    {
+      "id": "evitar_contramod_locus_Externo-Fatalista",
+      "categoria": "evitar_contramod_locus",
+      "aplicavel_quando": { "dim2": "Externo-Fatalista" },
+      "texto": "verbalização densa de argumentos abstratos, que não ressoa neste perfil — privilegiar fatos concretos e modelagem",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Sec 9.4 (linha Externo-Fatalista, coluna Risco específico) — L6 aprovada",
+      "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
+    },
+    {
+      "id": "evitar_contramod_locus_Externo-misto",
+      "categoria": "evitar_contramod_locus",
+      "aplicavel_quando": { "dim2": "Externo-misto" },
+      "texto": "fixar uma direção antes que os sinais apontem claramente para um lado — observar nas próximas consultas qual padrão vai se firmando",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Sec 9.4 (linha Externo-misto, coluna Risco específico) — L6 aprovada",
+      "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
+    },
+
+    "===== Subcategoria 3: contra-calibração de Autoeficácia (espelho negativo da calibração 9.5) =====",
+
+    {
+      "id": "evitar_contracal_autoeficacia_Alta",
+      "categoria": "evitar_contracal_autoeficacia",
+      "aplicavel_quando": { "dim4": "Alta" },
+      "texto": "subdivisão excessiva em micro-objetivos, que sub-aproveita a autoeficácia alta e pode ser lida como desconfiança da capacidade já demonstrada",
+      "tecnicas_mencionadas": ["plano_escalonado"],
+      "origem_canonica": "Sec 9.5 (linha Alta, contraste implícito ao 'Risco específico' de regressão) — L6 aprovada",
+      "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
+    },
+    {
+      "id": "evitar_contracal_autoeficacia_Moderada",
+      "categoria": "evitar_contracal_autoeficacia",
+      "aplicavel_quando": { "dim4": "Moderada" },
+      "texto": "plano de \"tudo de uma vez\", que sub-aproveita a autoeficácia moderada",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Ex. 9.8.1 (frase 3 do bloco 'A evitar', verbatim)",
+      "status": "extracao_direta_do_canonico"
+    },
+    {
+      "id": "evitar_contracal_autoeficacia_Baixa",
+      "categoria": "evitar_contracal_autoeficacia",
+      "aplicavel_quando": { "dim4": "Baixa" },
+      "texto": "plano grande demais para o passo viável neste perfil, que reforça a crença de incapacidade que o paciente já apresenta",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Sec 9.5 (linha Baixa, coluna Risco específico — texto 'Crítico') — L6 aprovada",
+      "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
+    },
+
+    "===== Subcategoria 4: A evitar específico de situação 2 (adiamento) =====",
+
+    {
+      "id": "a_evitar_situacao_2",
+      "categoria": "a_evitar_completo",
+      "aplicavel_quando": { "situacao_especial": 2 },
+      "titulo_bloco": "A evitar",
+      "texto": "Qualquer técnica persuasiva, mesmo motivacional; qualquer linguagem que possa soar como avaliação da incapacidade já presente na narrativa do paciente; plano completo de [DOMINIO_MIDFRASE].",
+      "tecnicas_mencionadas": ["persuasao_motivacional", "persuasao_confrontativa"],
+      "origem_canonica": "Ex. 9.8.2 (verbatim) — substitui a composição tripla quando a situação 2 está ativa",
+      "status": "extracao_direta_do_canonico"
+    },
+
+    "===== CATEGORIA: FECHAMENTO_BLOCO_3 — Obs 2 aprovada =====",
+
+    {
+      "id": "fechamento_bloco_3_padrao",
+      "categoria": "fechamento_bloco_3",
+      "aplicavel_quando": { "situacao_especial_negada": [1, 2] },
+      "texto": "As etapas concretas devem ser definidas em conjunto com o paciente, considerando a natureza específica da [DOMINIO_MIDFRASE] em discussão.",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Ex. 9.8.1 (verbatim do fechamento)",
+      "status": "extracao_direta_do_canonico"
+    },
+
+    "===== CATEGORIA: SITUACAO_ESPECIAL_1 — Sec 9.6 + Ex. 9.8.3 =====",
+
+    {
+      "id": "sit1_estrategia_entregue",
+      "categoria": "situacao_especial_1",
+      "aplicavel_quando": { "situacao_especial": 1 },
+      "titulo_bloco": "Estratégia prioritária",
+      "texto": "Antes de qualquer técnica comunicacional sobre [DOMINIO_MIDFRASE], é necessário, na próxima consulta, explorar o tema com o paciente e verificar se ele concorda com este como objetivo terapêutico.",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Sec 9.6 (sit. 1, verbatim) + Ex. 9.8.3 (verbatim)",
+      "status": "extracao_direta_do_canonico"
+    },
+    {
+      "id": "sit1_sugestao_abertura",
+      "categoria": "situacao_especial_1",
+      "aplicavel_quando": { "situacao_especial": 1 },
+      "titulo_bloco": "Sugestão de estrutura para a abertura da próxima consulta",
+      "texto": "\"Da última vez não chegamos a falar sobre [DOMINIO_COM_ARTIGO]. Conta para mim como tem sido?\"",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Sec 9.6 (sit. 1) + Ex. 9.8.3 (verbatim)",
+      "status": "extracao_direta_do_canonico"
+    },
+    {
+      "id": "sit1_alerta_pedagogico",
+      "categoria": "situacao_especial_1",
+      "aplicavel_quando": { "situacao_especial": 1 },
+      "titulo_bloco": "Alerta pedagógico",
+      "texto": "A consulta acolheu o paciente sem questionamento, mas a concordância superficial pode mascarar perfis de Nível 2 ou Nível 3 não detectados. A classificação atual é provisória e deve ser revisada na próxima consulta.",
+      "citacao_final": "(Conforme Carrió, 2012, p. 154 — \"persuasões aparentes\".)",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Sec 9.6 (sit. 1, verbatim) — citação de rodapé conforme regra Sec 9.7",
+      "status": "extracao_direta_do_canonico"
+    },
+    {
+      "id": "sit1_reflexao_dirigida",
+      "categoria": "situacao_especial_1",
+      "aplicavel_quando": { "situacao_especial": 1 },
+      "titulo_bloco": "Reflexão dirigida",
+      "texto": "\"O objetivo terapêutico não foi explorado nesta consulta. Em que momento isso poderia ter sido feito? O que impediu?\"",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Sec 9.6 (sit. 1, verbatim) + Ex. 9.8.3 (verbatim)",
+      "status": "extracao_direta_do_canonico"
+    },
+
+    "===== CATEGORIA: SITUACAO_ESPECIAL_3 — Sec 9.6 (Concordância='Não') =====",
+
+    {
+      "id": "sit3_alerta_prioritario",
+      "categoria": "situacao_especial_3",
+      "aplicavel_quando": { "situacao_especial": 3 },
+      "titulo_bloco": "Alerta prioritário",
+      "texto": "O paciente não concordava com [DOMINIO_MIDFRASE] como objetivo proposto. Antes de aplicar a estratégia abaixo, é necessário explicitar essa divergência — seja para reformular o objetivo terapêutico junto com o paciente, seja para nomear que se está optando por trabalhar um objetivo terapêutico que o paciente não compartilha.",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Sec 9.6 (sit. 3, verbatim)",
+      "status": "extracao_direta_do_canonico"
+    },
+
+    "===== CATEGORIA: SITUACAO_ESPECIAL_4 — Sec 9.6 (Externo-misto + intermediária) =====",
+
+    {
+      "id": "sit4_classificacao_em_formacao",
+      "categoria": "situacao_especial_4",
+      "aplicavel_quando": { "situacao_especial": 4 },
+      "titulo_bloco": "Classificação em formação",
+      "texto": "A classificação deste paciente ainda está em formação. Os achados desta consulta são insuficientes para classificação estabilizada — recomenda-se reavaliação em uma a duas consultas.",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Sec 9.6 (sit. 4, verbatim)",
+      "status": "extracao_direta_do_canonico"
+    },
+
+    "===== CATEGORIA: ALERTA_CONCORDANCIA_PARCIAL — Obs 3 aprovada =====",
+
+    {
+      "id": "alerta_concordancia_parcial",
+      "categoria": "alerta_modulacao",
+      "aplicavel_quando": { "concordancia": "parcial" },
+      "titulo_bloco": "Alerta",
+      "texto": "Concordância apenas parcial registrada no Passo 0 — o paciente concordou sem convicção. Verificar se o pouco entusiasmo reflete a autoestima comprometida ou divergência genuína com o objetivo terapêutico.",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Ex. 9.8.2 (verbatim) — alcance generalizado conforme Obs 3 aprovada",
+      "status": "extracao_direta_do_canonico"
+    },
+
+    "===== CATEGORIA: MODO_SIMPLIFICADO — Sec 4.4 =====",
+
+    {
+      "id": "modo_simplificado_linha_discreta",
+      "categoria": "rodape_resultado",
+      "aplicavel_quando": { "comportamento_vazio": true },
+      "texto": "Classificação realizada em modo simplificado: o comportamento específico do paciente não foi descrito. Para maior precisão na próxima consulta, considere preencher o campo Comportamento.",
+      "tecnicas_mencionadas": [],
+      "origem_canonica": "Sec 4.4 + decisão do handler na Fase 3.A (texto verbatim aprovado)",
+      "status": "extracao_direta_do_canonico"
+    }
+  ],
+
+  "ordem_blocos_resultado": {
+    "comentario": "Ordem extraída dos exemplos da Sec 9.8, registrada conforme L7 aprovada. Vira adendo da Sec 9.7 do canônico v1.4.",
+    "ordem": [
+      "1. Perfil classificado (sempre)",
+      "2. Pré-condição / Recomendação inicial / Cuidados de execução (condicional, vem de Autoestima ou sit. 2)",
+      "3. Estratégia prioritária (sempre)",
+      "4. Próxima consulta (condicional — sit. 1 ou sit. 2)",
+      "5. A evitar (condicional — omitido em sit. 1)",
+      "6. Alertas (sit. 3 prioritário; alerta de concordância parcial; alerta pedagógico de sit. 1)",
+      "7. Sugestão de abertura (sit. 1)",
+      "8. Reflexão dirigida (sit. 1) ou Reflexão para preceptoria (Bloco 7 padrão)",
+      "9. Glossário das técnicas (Bloco 6)"
+    ]
+  },
+
+  "estatisticas": {
+    "total_fragmentos": 33,
+    "extracao_direta_do_canonico": 14,
+    "extracao_canonica_com_inferencia_de_padrao_aprovada": 17,
+    "fragmentos_silenciosos": 1,
+    "templates_com_substituicao_dinamica": 1
+  }
+}
