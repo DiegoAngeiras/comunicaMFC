@@ -256,7 +256,7 @@
       "id": "evitar_contramod_locus_Misto",
       "categoria": "evitar_contramod_locus",
       "aplicavel_quando": { "dim2": "Misto" },
-      "texto": "linguagem que pendere unilateralmente para a autonomia ou para a dependência — os sinais que o paciente apresentou são variados, e impor um único lado pode descaracterizar o que ele está sentindo",
+      "texto": "linguagem que prepondere unilateralmente para a autonomia ou para a dependência — os sinais que o paciente apresentou são variados, e impor um único lado pode descaracterizar o que ele está sentindo",
       "tecnicas_mencionadas": [],
       "origem_canonica": "Sec 9.4 (linha Misto, coluna Risco específico) — espelho negativo da modulação correspondente, conforme L6 aprovada",
       "status": "extracao_canonica_com_inferencia_de_padrao_aprovada"
