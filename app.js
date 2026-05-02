@@ -6,8 +6,7 @@
 //    Fase 3.B → navegação completa entre as 6 telas (este arquivo)
 //
 //  Carregamento via fetch — exige servir o app via HTTP local
-//  durante desenvolvimento. Em produção (GitHub Pages) funciona
-//  nativamente.
+//  durante desenvolvimento.
 // =============================================================
 
 const App = (function () {
